@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - RUO ICS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .regulatory-text {
+            color: #bbb;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #ccc;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #ccc;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #666;
+            font-size: 11px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #64a8d6;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            text-align: center;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom-color: #64a8d6;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #ccc;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: white;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            height: calc(100vh - 104px); /* Total minus header and nav */
+            overflow-y: auto;
+        }
+
+        .bays-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .bay-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 140px;
+            position: relative;
+        }
+
+        .bay-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .bay-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .bay-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100px;
+        }
+
+        .create-run-btn {
+            background: #64a8d6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .create-run-btn:hover {
+            background: #5a96c4;
+        }
+
+        .run-info {
+            text-align: left;
+            margin-bottom: 12px;
+        }
+
+        .run-id-label {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 2px;
+        }
+
+        .run-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .assay-label {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 2px;
+        }
+
+        .assay-name {
+            font-size: 14px;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .bay-action {
+            background: #64a8d6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+        }
+
+        .bay-action:hover {
+            background: #5a96c4;
+        }
+
+        /* Bay Action Button Variants */
+        .bay-action.load-btn {
+            background: transparent;
+            color: #64a8d6;
+            border: 10px solid #64a8d6;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bay-action.load-btn:hover {
+            background: rgba(100, 168, 214, 0.1);
+        }
+
+        .bay-action.ready-btn {
+            background: transparent;
+            color: #999;
+            border: 10px solid #999;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .bay-action.ready-btn:hover {
+            background: rgba(153, 153, 153, 0.1);
+        }
+
+        .bay-action.done-btn {
+            background: transparent;
+            color: #64a8d6;
+            border: 10px solid #64a8d6;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bay-action.done-btn:hover {
+            background: rgba(100, 168, 214, 0.1);
+        }
+
+        .done-time {
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .remove-btn {
+            background: #64a8d6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            align-self: flex-start;
+        }
+
+        .unassigned-status {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .unassigned-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .unassigned-instruction {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .running-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#64a8d6 0deg 216deg, #555 216deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .progress-label {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            color: #ccc;
+        }
+
+        .time-info {
+            font-size: 12px;
+            color: #ccc;
+            text-align: center;
+        }
+
+        /* Bulks Section */
+        .bulks-section {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 16px;
+        }
+
+        .bulks-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .bulks-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .bulk-item {
+            text-align: center;
+        }
+
+        .bulk-container {
+            width: 100%;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .bulk-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #64a8d6;
+        }
+
+        .bulk-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+        }
+
+        .bulk-label {
+            font-size: 11px;
+            color: #ccc;
+        }
+
+        /* Run Group Controls */
+        .run-group-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .run-group-btn {
+            padding: 10px 20px;
+            border-radius: 3px;
+            border: 1px solid;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        .cancel-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .start-btn {
+            background: #4ecdc4;
+            color: white;
+            border-color: #4ecdc4;
+        }
+
+        .start-btn:hover {
+            background: #45b7b8;
+        }
+
+        .start-btn:disabled {
+            background: #666;
+            border-color: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()" style="cursor: pointer;">
+            <div class="regulatory-text">For Research Use Only</div>
+        </div>
+        <div class="header-center">
+            <!-- Optional center content -->
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()" style="cursor: pointer;">
+            RUO Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">RUO v2.1.5.3</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab active">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab" onclick="window.location.href='run-list.html'">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab" onclick="window.location.href='assays.html'">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab" onclick="window.location.href='settings.html'">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="window.location.href='support.html'">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Three Bays -->
+        <div class="bays-container">
+            <!-- Bay 1 - Unassigned -->
+            <div class="bay-card">
+                <div class="bay-header">
+                    <div class="bay-title">Bay 1</div>
+                </div>
+                <div class="bay-content">
+                    <div class="unassigned-status">
+                        <div class="unassigned-text">Bay Unassigned</div>
+                        <div class="unassigned-instruction">Define Run in App Command Center</div>
+                    </div>
+                    <button class="bay-action load-btn" onclick="createRun()">Create Run</button>
+                </div>
+            </div>
+
+            <!-- Bay 2 - Assigned but not loaded -->
+            <div class="bay-card">
+                <div class="bay-header">
+                    <div class="bay-title">Bay 2</div>
+                </div>
+                <div class="bay-content">
+                    <div class="run-info">
+                        <div class="run-id-label">Run ID</div>
+                        <div class="run-name">20250723-1433_Bay2_IL4</div>
+                        <div class="assay-label">Assay</div>
+                        <div class="assay-name">IL4</div>
+                    </div>
+                    <button class="bay-action load-btn">Load</button>
+                </div>
+            </div>
+
+            <!-- Bay 3 - Complete and ready to remove -->
+            <div class="bay-card">
+                <div class="bay-header">
+                    <div class="bay-title">Bay 3</div>
+                </div>
+                <div class="bay-content">
+                    <div class="run-info">
+                        <div class="run-id-label">Run ID</div>
+                        <div class="run-name">20250723-1433_Bay2_IL4</div>
+                        <div class="assay-label">Assay</div>
+                        <div class="assay-name">IL4</div>
+                    </div>
+                    <div class="running-status">
+                        <div class="bay-action done-btn">
+                            Done
+                            <div class="done-time">10:24AM</div>
+                        </div>
+                        <button class="remove-btn">Remove NULISAqPCR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulks Section -->
+        <div class="bulks-section">
+            <div class="bulks-header">Bulks</div>
+            <div class="bulks-grid">
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 55%;">
+                            <div class="bulk-percentage">55%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Deactivation Buffer</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 95%;">
+                            <div class="bulk-percentage">95%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Rinse Buffer</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 50%;">
+                            <div class="bulk-percentage">50%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Wash Buffer</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 19%;">
+                            <div class="bulk-percentage">19%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Waste 1</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 19%;">
+                            <div class="bulk-percentage">19%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Waste 2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Run Group Controls -->
+        <div class="run-group-controls">
+            <button class="run-group-btn cancel-btn">Cancel Run Group</button>
+            <button class="run-group-btn start-btn">Start Run Group</button>
+        </div>
+    </div>
+
+    <script>
+        function createRun() {
+            window.location.href = 'create-run.html';
+        }
+
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+        }
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to IVD mode?")) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - DX ICS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eee;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            height: calc(100vh - 104px);
+            overflow-y: auto;
+        }
+
+        .bays-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .bay-card {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 140px;
+            position: relative;
+        }
+
+        .bay-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .bay-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .bay-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100px;
+        }
+
+        .create-run-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .create-run-btn:hover {
+            background: #005a99;
+        }
+
+        .run-info {
+            text-align: left;
+            margin-bottom: 12px;
+        }
+
+        .run-id-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .run-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .assay-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .assay-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .bay-action {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+        }
+
+        .bay-action:hover {
+            background: #005a99;
+        }
+
+        /* Bay Action Button Variants */
+        .bay-action.load-btn {
+            background: transparent;
+            color: #007acc;
+            border: 10px solid #007acc;
+            border-radius: 50%;
+            width: 125px;
+            height: 125px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bay-action.load-btn:hover {
+            background: rgba(0, 122, 204, 0.1);
+        }
+
+        .bay-action.ready-btn {
+            background: transparent;
+            color: #666;
+            border: 10px solid #666;
+            border-radius: 50%;
+            width: 125px;
+            height: 125px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .bay-action.ready-btn:hover {
+            background: rgba(102, 102, 102, 0.1);
+        }
+
+        .bay-action.done-btn {
+            background: transparent;
+            color: #007acc;
+            border: 10px solid #007acc;
+            border-radius: 50%;
+            width: 125px;
+            height: 125px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bay-action.done-btn:hover {
+            background: rgba(0, 122, 204, 0.1);
+        }
+
+        .done-time {
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .view-results-text {
+            font-size: 9px;
+            margin-top: 2px;
+            color: #005a99;
+            font-weight: normal;
+        }
+
+        .remove-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            align-self: flex-start;
+        }
+
+        .unassigned-status {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .unassigned-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .unassigned-instruction {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .running-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .progress-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(#007acc 0deg 216deg, #ddd 216deg 360deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            position: absolute;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-label {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .time-info {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Bulks Section */
+        .bulks-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px;
+        }
+
+        .bulks-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        .bulks-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .bulk-item {
+            text-align: center;
+        }
+
+        .bulk-container {
+            width: 100%;
+            height: 80px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .bulk-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #007acc;
+        }
+
+        .bulk-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+        }
+
+        .bulk-label {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Run Group Controls */
+        .run-group-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .run-group-btn {
+            padding: 10px 20px;
+            border-radius: 3px;
+            border: 1px solid;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .cancel-btn {
+            background: white;
+            color: #d32f2f;
+            border-color: #d32f2f;
+        }
+
+        .cancel-btn:hover {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .start-btn {
+            background: #2e7d32;
+            color: white;
+            border-color: #2e7d32;
+        }
+
+        .start-btn:hover {
+            background: #1b5e20;
+        }
+
+        .start-btn:disabled {
+            background: #999;
+            border-color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Running Status */
+        .running-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .progress-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(#007acc 0deg, #ddd 0deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            position: relative;
+            transition: background 0.5s ease;
+        }
+
+        .progress-circle::before {
+            content: '';
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            position: absolute;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-label {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .time-info {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-center">
+            <!-- Optional center content -->
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()" style="cursor: pointer;">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab active">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab" onclick="window.location.href='run-list.html'">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab" onclick="goToAssays()">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab" onclick="window.location.href='settings.html'">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="window.location.href='support.html'">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Three Bays -->
+        <div class="bays-container">
+            <!-- Bay 1 - Now with created run in Load status -->
+            <div class="bay-card">
+                <div class="bay-header">
+                    <div class="bay-title">Bay 1</div>
+                </div>
+                <div class="bay-content">
+                    <div class="run-info">
+                        <div class="run-id-label">Run ID</div>
+                        <div class="run-name">20251223-1545_Bay1_BDpTau217</div>
+                        <div class="assay-label">Assay</div>
+                        <div class="assay-name">NULISAqPCR BD-pTau-217 IVD</div>
+                    </div>
+                    <button class="bay-action load-btn" onclick="loadBay1()">Load</button>
+                </div>
+            </div>
+
+            <!-- Bay 2 - Assigned but not loaded -->
+            <div class="bay-card">
+                <div class="bay-header">
+                    <div class="bay-title">Bay 2</div>
+                </div>
+                <div class="bay-content">
+                    <div class="run-info">
+                        <div class="run-id-label">Run ID</div>
+                        <div class="run-name">20250723-1433_Bay2_IL4</div>
+                        <div class="assay-label">Assay</div>
+                        <div class="assay-name">IL4</div>
+                    </div>
+                    <button class="bay-action load-btn" onclick="loadBay2()">Load</button>
+                </div>
+            </div>
+
+            <!-- Bay 3 - Complete and ready to remove -->
+            <div class="bay-card">
+                <div class="bay-header">
+                    <div class="bay-title">Bay 3</div>
+                </div>
+                <div class="bay-content">
+                    <div class="run-info">
+                        <div class="run-id-label">Run ID</div>
+                        <div class="run-name">20250723-1433_Bay2_IL4</div>
+                        <div class="assay-label">Assay</div>
+                        <div class="assay-name">IL4</div>
+                    </div>
+                    <div class="running-status">
+                        <div class="bay-action done-btn" onclick="viewRunDetails('20250723-1433_Bay2_IL4')">
+                            Done
+                            <div class="done-time">10:24AM</div>
+                            <div class="view-results-text">View Results</div>
+                        </div>
+                        <button class="remove-btn">Remove NULISAqPCR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulks Section -->
+        <div class="bulks-section">
+            <div class="bulks-header">Bulks</div>
+            <div class="bulks-grid">
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 55%;">
+                            <div class="bulk-percentage">55%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Deactivation Buffer</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 95%;">
+                            <div class="bulk-percentage">95%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Rinse Buffer</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 50%;">
+                            <div class="bulk-percentage">50%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Wash Buffer</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 19%;">
+                            <div class="bulk-percentage">19%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Waste 1</div>
+                </div>
+                <div class="bulk-item">
+                    <div class="bulk-container">
+                        <div class="bulk-fill" style="height: 19%;">
+                            <div class="bulk-percentage">19%</div>
+                        </div>
+                    </div>
+                    <div class="bulk-label">Waste 2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Run Group Controls -->
+        <div class="run-group-controls">
+            <button class="run-group-btn cancel-btn" onclick="cancelRunGroup()">Cancel Run Group</button>
+            <button class="run-group-btn start-btn" id="startRunBtn" onclick="startRunGroup()">Start Run Group</button>
+        </div>
+    </div>
+
+    <script>
+        function loadBay1() {
+            window.location.href = 'bay1-load.html';
+
+        }
+
+        function loadBay2() {
+            window.location.href = 'bay2-load.html';
+
+        }
+
+        function viewResults() {
+            window.location.href = 'run-list.html';
+
+        }
+
+        function goToAssays() {
+            window.location.href = 'assays.html';
+
+        }
+
+        function viewRunDetails(runId) {
+            // Store the selected run ID and navigate to run details
+            localStorage.setItem('selectedRunId', runId);
+            window.location.href = 'run-details.html';
+
+        }
+
+        let runGroupActive = false;
+
+        // Check localStorage and update bay statuses on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check Bay 1 status
+            const bay1Status = localStorage.getItem('bay1Status');
+            if (bay1Status === 'ready') {
+                const bay1Button = document.querySelector('.bay-card:nth-child(1) .bay-action');
+                bay1Button.className = 'bay-action ready-btn';
+                bay1Button.textContent = 'Ready to Run';
+                bay1Button.onclick = function() { /* Bay 1 ready */ };
+
+        }
+
+            // Check Bay 2 status
+            const bay2Status = localStorage.getItem('bay2Status');
+            if (bay2Status === 'ready') {
+                const bay2Button = document.querySelector('.bay-card:nth-child(2) .bay-action');
+                bay2Button.className = 'bay-action ready-btn';
+                bay2Button.textContent = 'Ready to Run';
+                bay2Button.onclick = function() { /* Bay 2 ready */ };
+
+        }
+        });
+
+        function cancelRunGroup() {
+            if (runGroupActive) {
+                location.reload(); // Reset to initial state
+
+        }
+
+        }
+
+        function startRunGroup() {
+            const bay1Status = localStorage.getItem('bay1Status');
+            const bay2Status = localStorage.getItem('bay2Status');
+
+            if (bay1Status !== 'ready' || bay2Status !== 'ready') {
+                return; // Don't start if bays not ready
+
+        }
+
+            runGroupActive = true;
+            document.getElementById('startRunBtn').disabled = true;
+            document.getElementById('startRunBtn').textContent = 'Running...';
+
+            // Start Bay 1 first
+            startBayRun(1, function() {
+                // When Bay 1 completes, start Bay 2
+                startBayRun(2, function() {
+                    // Both bays complete
+                    runGroupActive = false;
+                    document.getElementById('startRunBtn').disabled = false;
+                    document.getElementById('startRunBtn').textContent = 'Start Run Group';
+                });
+            });
+
+        }
+
+        function startBayRun(bayNumber, callback) {
+            const bayCard = document.querySelector(`.bay-card:nth-child(${bayNumber})`);
+            const bayContent = bayCard.querySelector('.bay-content');
+
+            // Replace button with progress circle
+            bayContent.innerHTML = `
+                <div class="run-info">
+                    <div class="run-id-label">Run ID</div>
+                    <div class="run-name">${bayNumber === 1 ? '20251223-1545_Bay1_BDpTau217' : '20250723-1433_Bay2_IL4'}</div>
+                    <div class="assay-label">Assay</div>
+                    <div class="assay-name">${bayNumber === 1 ? 'NULISAqPCR BD-pTau-217 IVD' : 'IL4'}</div>
+                </div>
+                <div class="running-status">
+                    <div class="progress-circle" id="progressCircle${bayNumber}">
+                        <div class="progress-text" id="progressText${bayNumber}">8:00</div>
+                        <div class="progress-label">HOURS</div>
+                    </div>
+                    <div class="time-info">Estimated</div>
+                </div>
+            `;
+
+            // Start countdown animation
+            animateProgress(bayNumber, callback);
+
+        }
+
+        function animateProgress(bayNumber, callback) {
+            const progressCircle = document.getElementById(`progressCircle${bayNumber}`);
+            const progressText = document.getElementById(`progressText${bayNumber}`);
+
+            const timeSteps = ['8:00', '6:00', '4:00', '2:00', 'Done'];
+            const progressSteps = [0, 90, 180, 270, 360]; // degrees for conic-gradient
+            let currentStep = 0;
+
+            function updateProgress() {
+                if (currentStep < timeSteps.length) {
+                    // Update text
+                    progressText.textContent = timeSteps[currentStep];
+
+                    // Update progress circle background
+                    if (currentStep < progressSteps.length - 1) {
+                        const degrees = progressSteps[currentStep];
+                        progressCircle.style.background = `conic-gradient(#007acc 0deg ${degrees}deg, #ddd ${degrees}deg 360deg)`;
+                    } else {
+                        // Final step - "Done"
+                        progressCircle.style.background = 'conic-gradient(#48bb78 0deg 360deg, #ddd 360deg 360deg)';
+                        progressText.style.color = '#48bb78';
+
+                        // Convert to Done button after animation
+                        setTimeout(() => {
+                            const bayCard = document.querySelector(`.bay-card:nth-child(${bayNumber})`);
+                            const bayContent = bayCard.querySelector('.bay-content');
+                            bayContent.innerHTML = `
+                                <div class="run-info">
+                                    <div class="run-id-label">Run ID</div>
+                                    <div class="run-name">${bayNumber === 1 ? '20251223-1545_Bay1_BDpTau217' : '20250723-1433_Bay2_IL4'}</div>
+                                    <div class="assay-label">Assay</div>
+                                    <div class="assay-name">${bayNumber === 1 ? 'NULISAqPCR BD-pTau-217 IVD' : 'IL4'}</div>
+                                </div>
+                                <div class="running-status">
+                                    <div class="bay-action done-btn" onclick="viewRunDetails('${bayNumber === 1 ? '20251223-1545_Bay1_BDpTau217' : '20250723-1433_Bay2_IL4'}')">
+                                        Done
+                                        <div class="done-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                        <div class="view-results-text">View Results</div>
+                                    </div>
+                                    <button class="remove-btn">Remove NULISAqPCR</button>
+                                </div>
+                            `;
+
+                            // Call callback to proceed to next bay or finish
+                            if (callback) callback();
+                        }, 1000);
+                        return;
+
+        }
+
+                    currentStep++;
+                    setTimeout(updateProgress, 500); // 0.5 second intervals
+
+        }
+
+        }
+
+            updateProgress();
+
+        }
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to RUO mode?")) {
+                window.location.href = "login-ruo.html";
+            }
+        }
+    </script>
+</body>
+</html>

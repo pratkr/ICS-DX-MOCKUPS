@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Run Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eee;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            height: calc(100vh - 104px);
+            overflow-y: auto;
+        }
+
+        .back-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .back-btn:hover {
+            background: #555;
+        }
+
+        /* Run Header */
+        .run-header {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .run-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .run-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Results Content */
+        .results-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .results-table-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 16px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .table-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .table-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #eee;
+        }
+
+        .results-table th:last-child {
+            border-right: none;
+        }
+
+        .results-table td {
+            padding: 12px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid #eee;
+            border-right: 1px solid #eee;
+        }
+
+        .results-table td:last-child {
+            border-right: none;
+        }
+
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .results-table tr:nth-child(even) {
+            background: #fdfdfd;
+        }
+
+        /* Sample Status Colors */
+        .status-pass {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .status-fail {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .status-flag {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-value.pass {
+            color: #2e7d32;
+        }
+
+        .stat-value.fail {
+            color: #d32f2f;
+        }
+
+        .stat-value.flag {
+            color: #f57c00;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 10px 16px;
+            border: 1px solid #007acc;
+            border-radius: 4px;
+            background: white;
+            color: #007acc;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: #007acc;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #007acc;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #005a99;
+        }
+
+        /* QC Status */
+        .qc-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 12px;
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+        }
+
+        .qc-icon {
+            width: 20px;
+            height: 20px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .qc-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()" style="cursor: pointer;">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()" style="cursor: pointer;">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab" onclick="goHome()">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab active">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab" onclick="goToAssays()">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab" onclick="window.location.href='settings.html'">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="window.location.href='support.html'">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <button class="back-btn" onclick="goBackToResults()">← Back to Results</button>
+
+        <!-- Run Header -->
+        <div class="run-header">
+            <div class="run-title" id="runTitle">Run Details</div>
+            <div class="run-info-grid">
+                <div class="info-item">
+                    <div class="info-label">Run Name</div>
+                    <div class="info-value" id="runName">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Assay</div>
+                    <div class="info-value" id="assayName">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Assay Version</div>
+                    <div class="info-value" id="assayVersion">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Bay</div>
+                    <div class="info-value" id="bayNumber">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Start Date</div>
+                    <div class="info-value" id="startDate">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Completion Date</div>
+                    <div class="info-value" id="completionDate">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Operator</div>
+                    <div class="info-value" id="operator">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Kit/Reagent Lot</div>
+                    <div class="info-value" id="kitLot">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Software Version</div>
+                    <div class="info-value" id="softwareVersion">Loading...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value" id="runStatus">Loading...</div>
+                </div>
+            </div>
+
+            <div class="qc-status">
+                <div class="qc-icon">✓</div>
+                <div class="qc-text">QC Passed - All Controls Within Range</div>
+            </div>
+        </div>
+
+        <!-- Results Content -->
+        <div class="results-content">
+            <div class="results-table-container">
+                <div class="table-header">
+                    <div class="table-title">Sample Results</div>
+                </div>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Sample ID</th>
+                            <th>Sample Plate Well</th>
+                            <th>Assay Plate Well ID</th>
+                            <th>Concentration</th>
+                            <th>Units</th>
+                            <th>QC Status</th>
+                            <th>Results Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sample1</td>
+                            <td>A1</td>
+                            <td>AP001_A1</td>
+                            <td>45.2</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample2</td>
+                            <td>A2</td>
+                            <td>AP001_A2</td>
+                            <td>127.8</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample3</td>
+                            <td>A3</td>
+                            <td>AP001_A3</td>
+                            <td>23.4</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample4</td>
+                            <td>A4</td>
+                            <td>AP001_A4</td>
+                            <td>89.7</td>
+                            <td>pg/mL</td>
+                            <td class="status-flag">Review</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td>Sample5</td>
+                            <td>A5</td>
+                            <td>AP001_A5</td>
+                            <td>156.3</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample6</td>
+                            <td>A6</td>
+                            <td>AP001_A6</td>
+                            <td>67.9</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample7</td>
+                            <td>A7</td>
+                            <td>AP001_A7</td>
+                            <td>201.4</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample8</td>
+                            <td>A8</td>
+                            <td>AP001_A8</td>
+                            <td>34.1</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample9</td>
+                            <td>A9</td>
+                            <td>AP001_A9</td>
+                            <td>98.6</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sample10</td>
+                            <td>A10</td>
+                            <td>AP001_A10</td>
+                            <td>142.7</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Control Pos</td>
+                            <td>B1</td>
+                            <td>AP001_B1</td>
+                            <td>185.2</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Control Neg</td>
+                            <td>B2</td>
+                            <td>AP001_B2</td>
+                            <td>2.8</td>
+                            <td>pg/mL</td>
+                            <td class="status-pass">Pass</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="summary-panel">
+                <div class="summary-title">Run Summary</div>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Total Samples</div>
+                        <div class="stat-value">12</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Passed</div>
+                        <div class="stat-value pass">11</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Failed</div>
+                        <div class="stat-value fail">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Flagged</div>
+                        <div class="stat-value flag">1</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="generateReport()">Generate Report</button>
+                    <button class="action-btn">Export Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample run data
+        const runData = {
+            'AAA08/12/2025Run001': {
+                name: 'AAA08/12/2025Run001',
+                assay: 'BD-pTau-217 IVD',
+                assayVersion: 'v2.1.3',
+                bay: 'Bay 1',
+                start: '08/12/2025 8:30 AM',
+                completion: '08/12/2025 11:15 AM',
+                operator: 'Admin1',
+                kitLot: 'NULISA-BDP217-LOT2025A (exp. 2026-03-15)',
+                softwareVersion: 'IVD v1.2.0.0',
+                status: 'Complete'
+            },
+            '20251223-1545_Bay1_BDpTau217': {
+                name: '20251223-1545_Bay1_BDpTau217',
+                assay: 'BD-pTau-217 IVD',
+                assayVersion: 'v2.1.3',
+                bay: 'Bay 1',
+                start: '12/23/2025 3:45 PM',
+                completion: '12/23/2025 4:45 PM',
+                operator: 'xiaojun8',
+                kitLot: 'NULISA-BDP217-LOT2025A (exp. 2026-03-15)',
+                softwareVersion: 'IVD v1.2.0.0',
+                status: 'Complete'
+            },
+            '20250723-1433_Bay2_IL4': {
+                name: '20250723-1433_Bay2_IL4',
+                assay: 'IL4',
+                bay: 'Bay 2',
+                start: '12/23/2025 1:33 PM',
+                completion: '12/23/2025 4:50 PM',
+                operator: 'xiaojun8',
+                status: 'Complete'
+            }
+        };
+
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function goBackToResults() {
+            window.location.href = 'run-list.html';
+
+        }
+
+        function goToAssays() {
+            window.location.href = 'assays.html';
+
+        }
+
+        function generateReport() {
+            const selectedRunId = localStorage.getItem('selectedRunId');
+            localStorage.setItem('reportRunId', selectedRunId);
+            window.location.href = 'clinical-report.html';
+
+        }
+
+        // Load run details on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedRunId = localStorage.getItem('selectedRunId');
+            const runInfo = runData[selectedRunId] || runData['20251223-1545_Bay1_BDpTau217'];
+
+            document.getElementById('runTitle').textContent = `Run Details - ${runInfo.name}`;
+            document.getElementById('runName').textContent = runInfo.name;
+            document.getElementById('assayName').textContent = runInfo.assay;
+            document.getElementById('assayVersion').textContent = runInfo.assayVersion;
+            document.getElementById('bayNumber').textContent = runInfo.bay;
+            document.getElementById('startDate').textContent = runInfo.start;
+            document.getElementById('startDate').textContent = runInfo.start || '12/23/2025 1:33 PM';
+            document.getElementById('completionDate').textContent = runInfo.completion;
+            document.getElementById('operator').textContent = runInfo.operator;
+            document.getElementById('kitLot').textContent = runInfo.kitLot;
+            document.getElementById('softwareVersion').textContent = runInfo.softwareVersion;
+            document.getElementById('runStatus').textContent = runInfo.status;
+        });
+
+        // Action button handlers
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Action implementations would go here
+            });
+        });
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to RUO mode?")) {
+                window.location.href = "login-ruo.html";
+            }
+        }
+    </script>
+</body>
+</html>

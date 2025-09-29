@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Bay States Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            color: #333;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .states-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .state-demo {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .state-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007acc;
+            text-align: center;
+        }
+
+        .bay-card {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 140px;
+            position: relative;
+        }
+
+        .bay-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .bay-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .bay-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100px;
+        }
+
+        .create-run-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .run-info {
+            text-align: left;
+            margin-bottom: 12px;
+        }
+
+        .run-id-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .run-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .assay-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .assay-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .bay-action {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center;
+            margin-top: auto;
+        }
+
+        /* Bay Action Button Variants */
+        .bay-action.load-btn {
+            background: transparent;
+            color: #007acc;
+            border: 10px solid #007acc;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bay-action.load-btn:hover {
+            background: rgba(0, 122, 204, 0.1);
+        }
+
+        .bay-action.ready-btn {
+            background: transparent;
+            color: #666;
+            border: 10px solid #666;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .bay-action.ready-btn:hover {
+            background: rgba(102, 102, 102, 0.1);
+        }
+
+        .bay-action.done-btn {
+            background: transparent;
+            color: #007acc;
+            border: 10px solid #007acc;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bay-action.done-btn:hover {
+            background: rgba(0, 122, 204, 0.1);
+        }
+
+        .done-time {
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .remove-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+            align-self: flex-start;
+        }
+
+        .running-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#007acc 0deg 216deg, #ddd 216deg 360deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            position: absolute;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-label {
+            position: relative;
+            z-index: 1;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .time-info {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .unassigned-status {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .unassigned-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .unassigned-instruction {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 class="demo-title">ARGO HT DX ICS - Bay States Demonstration</h1>
+
+        <div class="states-grid">
+            <!-- State A: Unassigned -->
+            <div class="state-demo">
+                <div class="state-title">A) Unassigned</div>
+                <div class="bay-card">
+                    <div class="bay-header">
+                        <div class="bay-title">Bay 1</div>
+                    </div>
+                    <div class="bay-content">
+                        <div class="unassigned-status">
+                            <div class="unassigned-text">Bay Unassigned</div>
+                            <div class="unassigned-instruction">Define Run in App Command Center</div>
+                        </div>
+                        <button class="bay-action load-btn">Create Run</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- State B: Assigned but not loaded -->
+            <div class="state-demo">
+                <div class="state-title">B) Assigned but Not Loaded</div>
+                <div class="bay-card">
+                    <div class="bay-header">
+                        <div class="bay-title">Bay 2</div>
+                    </div>
+                    <div class="bay-content">
+                        <div class="run-info">
+                            <div class="run-id-label">Run ID</div>
+                            <div class="run-name">20250723-1433_Bay1_CNS_Project_001</div>
+                            <div class="assay-label">Assay</div>
+                            <div class="assay-name">CNS Disease Panel 120 (V2)</div>
+                        </div>
+                        <button class="bay-action load-btn">Load</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- State C: Assigned and loaded, ready to run -->
+            <div class="state-demo">
+                <div class="state-title">C) Loaded and Ready to Run</div>
+                <div class="bay-card">
+                    <div class="bay-header">
+                        <div class="bay-title">Bay 1</div>
+                    </div>
+                    <div class="bay-content">
+                        <div class="run-info">
+                            <div class="run-id-label">Run ID</div>
+                            <div class="run-name">20250723-1433_Bay1_CNS_Project_001</div>
+                            <div class="assay-label">Assay</div>
+                            <div class="assay-name">CNS Disease Panel 120 (V2)</div>
+                        </div>
+                        <div class="running-status">
+                            <button class="bay-action ready-btn">
+                                Ready to<br>Run
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- State D: Running in progress -->
+            <div class="state-demo">
+                <div class="state-title">D) Running in Progress</div>
+                <div class="bay-card">
+                    <div class="bay-header">
+                        <div class="bay-title">Bay 1</div>
+                    </div>
+                    <div class="bay-content">
+                        <div class="run-info">
+                            <div class="run-id-label">Run ID</div>
+                            <div class="run-name">20250723-1433_Bay1_CNS_Project_001</div>
+                            <div class="assay-label">Assay</div>
+                            <div class="assay-name">CNS Disease Panel 120 (V2)</div>
+                        </div>
+                        <div class="running-status">
+                            <div class="progress-circle">
+                                <div class="progress-text">5:47</div>
+                                <div class="progress-label">HOURS</div>
+                            </div>
+                            <div class="time-info">Estimated</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- State E: Complete and ready to remove -->
+            <div class="state-demo">
+                <div class="state-title">E) Complete - Ready to Remove</div>
+                <div class="bay-card">
+                    <div class="bay-header">
+                        <div class="bay-title">Bay 2</div>
+                    </div>
+                    <div class="bay-content">
+                        <div class="run-info">
+                            <div class="run-id-label">Run ID</div>
+                            <div class="run-name">20250723-1433_Bay2_IL4</div>
+                            <div class="assay-label">Assay</div>
+                            <div class="assay-name">IL4</div>
+                        </div>
+                        <div class="running-status">
+                            <div class="bay-action done-btn">
+                                Done
+                                <div class="done-time">10:24AM</div>
+                            </div>
+                            <button class="remove-btn">Remove NULISAqPCR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

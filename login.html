@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 40px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 80px;
+            border: 2px solid #ddd;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 500px;
+            margin-top: 120px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .user-select {
+            margin-bottom: 50px;
+        }
+
+        .user-dropdown {
+            width: 100%;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            color: #333;
+            font-size: 18px;
+            appearance: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-dropdown:focus {
+            outline: none;
+            border-color: #007acc;
+            background: #f8f9fa;
+        }
+
+        .user-dropdown option {
+            background: white;
+            color: #333;
+            padding: 10px;
+        }
+
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007acc;
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        .pin-section {
+            margin-bottom: 40px;
+        }
+
+        .pin-label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pin-display {
+            font-size: 32px;
+            letter-spacing: 8px;
+            margin-bottom: 30px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .key-button {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            color: #333;
+            font-size: 24px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key-button:hover {
+            background: #f8f9fa;
+            border-color: #999;
+        }
+
+        .key-button:active {
+            transform: scale(0.95);
+        }
+
+        .key-button.clear {
+            font-size: 18px;
+        }
+
+        .key-button.enter {
+            background: #007acc;
+            border-color: #007acc;
+            color: white;
+        }
+
+        .key-button.enter:hover {
+            background: #005a99;
+            border-color: #005a99;
+        }
+
+        .key-button.enter::after {
+            content: '→';
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .key-0 {
+            grid-column: 2;
+        }
+
+        .key-clear {
+            grid-column: 1;
+        }
+
+        .key-enter {
+            grid-column: 3;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mode-indicator">IVD Mode</div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="section-title">Select User</div>
+
+            <div class="user-select">
+                <div class="dropdown-wrapper">
+                    <select class="user-dropdown" id="userSelect">
+                        <option value="">ARGO Operator</option>
+                        <option value="supervisor">Lab Supervisor</option>
+                        <option value="technician">Lab Technician</option>
+                        <option value="admin">System Admin</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-title">Enter PIN</div>
+
+            <div class="pin-section">
+                <div class="pin-display" id="pinDisplay">******</div>
+
+                <div class="pin-keypad">
+                    <button class="key-button" onclick="enterPin('1')">1</button>
+                    <button class="key-button" onclick="enterPin('2')">2</button>
+                    <button class="key-button" onclick="enterPin('3')">3</button>
+                    <button class="key-button" onclick="enterPin('4')">4</button>
+                    <button class="key-button" onclick="enterPin('5')">5</button>
+                    <button class="key-button" onclick="enterPin('6')">6</button>
+                    <button class="key-button" onclick="enterPin('7')">7</button>
+                    <button class="key-button" onclick="enterPin('8')">8</button>
+                    <button class="key-button" onclick="enterPin('9')">9</button>
+                    <button class="key-button key-clear clear" onclick="clearPin()">⌫</button>
+                    <button class="key-button key-0" onclick="enterPin('0')">0</button>
+                    <button class="key-button key-enter enter" onclick="submitPin()"></button>
+                </div>
+
+                <div class="error-message" id="errorMessage">Invalid PIN. Please try again.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPin = '';
+        const correctPin = '123456'; // Demo 6-digit PIN
+
+        function enterPin(digit) {
+            if (currentPin.length < 6) {
+                currentPin += digit;
+                updatePinDisplay();
+                hideError();
+            }
+        }
+
+        function clearPin() {
+            if (currentPin.length > 0) {
+                currentPin = currentPin.slice(0, -1);
+                updatePinDisplay();
+                hideError();
+            }
+        }
+
+        function updatePinDisplay() {
+            const display = document.getElementById('pinDisplay');
+            if (currentPin.length === 0) {
+                display.textContent = '******';
+            } else {
+                display.textContent = '*'.repeat(currentPin.length) +
+                                    (currentPin.length < 6 ? '_'.repeat(6 - currentPin.length) : '');
+            }
+        }
+
+        function submitPin() {
+            if (currentPin.length === 6) {
+                if (currentPin === correctPin) {
+                    // Successful login
+                    window.location.href = 'main-layout-home.html';
+                } else {
+                    showError();
+                    currentPin = '';
+                    updatePinDisplay();
+                }
+            }
+        }
+
+        function showError() {
+            document.getElementById('errorMessage').classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+
+        // Allow Enter key to submit PIN
+        document.addEventListener('keydown', function(e) {
+            if (e.key >= '0' && e.key <= '9') {
+                enterPin(e.key);
+            } else if (e.key === 'Backspace') {
+                clearPin();
+            } else if (e.key === 'Enter') {
+                submitPin();
+            }
+        });
+    </script>
+</body>
+</html>

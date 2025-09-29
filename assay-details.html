@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Assay Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eee;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .back-btn:hover {
+            background: #555;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .assay-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .assay-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .regulatory-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .export-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .export-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .export-btn:hover {
+            background: #005a99;
+        }
+
+        .export-btn.secondary {
+            background: white;
+            color: #007acc;
+            border: 1px solid #007acc;
+        }
+
+        .export-btn.secondary:hover {
+            background: #f0f8ff;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .content-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 16px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .section-content {
+            padding: 16px;
+        }
+
+        /* Full width sections */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Parameter Tables */
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .param-table tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        .param-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .param-table td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .param-label {
+            font-weight: bold;
+            color: #666;
+            width: 40%;
+            font-size: 13px;
+        }
+
+        .param-value {
+            color: #333;
+            font-size: 13px;
+        }
+
+        .param-value.code {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        /* Lists */
+        .param-list {
+            margin: 0;
+            padding-left: 16px;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .param-list li {
+            margin-bottom: 4px;
+        }
+
+        /* Badges */
+        .status-badge {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .version-badge {
+            background: #fff3cd;
+            color: #856404;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Consumables Grid */
+        .consumables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .consumable-item {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 12px;
+        }
+
+        .consumable-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .consumable-details {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Read-only indicator */
+        .readonly-indicator {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .readonly-indicator .icon {
+            color: #856404;
+            font-size: 16px;
+        }
+
+        .readonly-text {
+            color: #856404;
+            font-size: 13px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()" style="cursor: pointer;">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab" onclick="goHome()">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab" onclick="window.location.href='run-list.html'">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab active">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab" onclick="window.location.href='settings.html'">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="window.location.href='support.html'">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <button class="back-btn" onclick="goBackToAssays()">← Back to Assays</button>
+
+        <!-- Read-only Indicator -->
+        <div class="readonly-indicator">
+            <span class="icon">🔒</span>
+            <span class="readonly-text">Read-Only Mode: This assay is validated for IVD use and cannot be modified</span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <div class="assay-title">BDpTau-217 Singleplex Assay</div>
+                <div class="assay-subtitle">NULISA singleplex qPCR assay for phosphorylated tau-217 quantification</div>
+                <div style="margin-top: 8px;">
+                    <span class="regulatory-badge">IVD</span>
+                </div>
+            </div>
+            <div class="export-actions">
+                <button class="export-btn secondary" onclick="printAssay()">🖨️ Print</button>
+                <button class="export-btn" onclick="exportAssay()">📤 Export Details</button>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Basic Information -->
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-title">Basic Information</div>
+                    <div class="section-subtitle">Assay identification and metadata</div>
+                </div>
+                <div class="section-content">
+                    <table class="param-table">
+                        <tr>
+                            <td class="param-label">Assay ID:</td>
+                            <td class="param-value code">singleplex-assay-v1.0</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Display Name:</td>
+                            <td class="param-value">BDpTau-217 Singleplex Assay</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Version:</td>
+                            <td class="param-value"><span class="version-badge">1.0.0</span></td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Created Date:</td>
+                            <td class="param-value">2024-12-20 10:00:00 UTC</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Last Modified:</td>
+                            <td class="param-value">2024-12-20 10:00:00 UTC</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Author:</td>
+                            <td class="param-value">Alamar Biosciences</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Assay Classification -->
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-title">Classification</div>
+                    <div class="section-subtitle">Assay type and detection method</div>
+                </div>
+                <div class="section-content">
+                    <table class="param-table">
+                        <tr>
+                            <td class="param-label">Assay Type:</td>
+                            <td class="param-value">Singleplex</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Detection Method:</td>
+                            <td class="param-value">qPCR</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Sample Matrices:</td>
+                            <td class="param-value">
+                                <ul class="param-list">
+                                    <li>Serum</li>
+                                    <li>Plasma (K₂EDTA)</li>
+                                    <li>CSF</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Regulatory Status:</td>
+                            <td class="param-value"><span class="status-badge">IVD Approved</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Version Compatibility -->
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-title">Version Compatibility</div>
+                    <div class="section-subtitle">Software version requirements</div>
+                </div>
+                <div class="section-content">
+                    <table class="param-table">
+                        <tr>
+                            <td class="param-label">Min ICS Version:</td>
+                            <td class="param-value code">1.5.0</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Max ICS Version:</td>
+                            <td class="param-value code">3.0.0</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Protocol Revision:</td>
+                            <td class="param-value code">1.0</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">ADF Schema Version:</td>
+                            <td class="param-value code">1.0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Target Analyte -->
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-title">Target Analyte</div>
+                    <div class="section-subtitle">Analyte properties and specifications</div>
+                </div>
+                <div class="section-content">
+                    <table class="param-table">
+                        <tr>
+                            <td class="param-label">Analyte Name:</td>
+                            <td class="param-value">Phosphorylated Tau-217 (pTau-217)</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Molecular Weight:</td>
+                            <td class="param-value">50,000 Da</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Workflow Parameters -->
+            <div class="content-section full-width">
+                <div class="section-header">
+                    <div class="section-title">Workflow Parameters</div>
+                    <div class="section-subtitle">Protocol execution specifications</div>
+                </div>
+                <div class="section-content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="margin-bottom: 8px; color: #333;">Basic Protocol</h4>
+                            <table class="param-table">
+                                <tr>
+                                    <td class="param-label">Total Duration:</td>
+                                    <td class="param-value">300 minutes</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-label">Sample Volume:</td>
+                                    <td class="param-value">20 μL</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-label">Replicate Volume:</td>
+                                    <td class="param-value">20 μL</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 8px; color: #333;">Sample Configuration</h4>
+                            <table class="param-table">
+                                <tr>
+                                    <td class="param-label">Max Samples:</td>
+                                    <td class="param-value">74</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-label">Max Replicates:</td>
+                                    <td class="param-value">3</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-label">Dead Volume:</td>
+                                    <td class="param-value">5 μL</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 8px; color: #333;">Sample Handling</h4>
+                            <table class="param-table">
+                                <tr>
+                                    <td class="param-label">Dilution Required:</td>
+                                    <td class="param-value">Yes</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-label">Dilution Factor:</td>
+                                    <td class="param-value">1:5</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-label">Incubation Temp:</td>
+                                    <td class="param-value">25°C</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Options -->
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-title">User Options</div>
+                    <div class="section-subtitle">Runtime configuration choices</div>
+                </div>
+                <div class="section-content">
+                    <table class="param-table">
+                        <tr>
+                            <td class="param-label">Volume Range:</td>
+                            <td class="param-value">15-25 μL</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Replicate Options:</td>
+                            <td class="param-value">1, 2, 3</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Temperature Options:</td>
+                            <td class="param-value">20°C, 25°C, 30°C</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Default Temperature:</td>
+                            <td class="param-value">25°C</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Normalization:</td>
+                            <td class="param-value">Optional</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Data Analysis -->
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-title">Data Analysis</div>
+                    <div class="section-subtitle">Processing and quality control</div>
+                </div>
+                <div class="section-content">
+                    <table class="param-table">
+                        <tr>
+                            <td class="param-label">Normalization:</td>
+                            <td class="param-value">Disabled by default</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Calibrator Replicates:</td>
+                            <td class="param-value">2</td>
+                        </tr>
+                        <tr>
+                            <td class="param-label">Control Replicates:</td>
+                            <td class="param-value">2</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Required Consumables -->
+            <div class="content-section full-width">
+                <div class="section-header">
+                    <div class="section-title">Required Consumables</div>
+                    <div class="section-subtitle">Materials and inventory per run</div>
+                </div>
+                <div class="section-content">
+                    <div class="consumables-grid">
+                        <div class="consumable-item">
+                            <div class="consumable-title">Sample Plate</div>
+                            <div class="consumable-details">
+                                Type: 96-well deep well<br>
+                                Quantity: 1<br>
+                                Part Number: VWR-10062-898
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">PCR Plate</div>
+                            <div class="consumable-details">
+                                Type: 96-well PCR plate<br>
+                                Quantity: 1<br>
+                                Part Number: BIO-HSP9601<br>
+                                Vendor: Bio-Rad
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">Incubation Plates</div>
+                            <div class="consumable-details">
+                                Type: 96-well microplate<br>
+                                Quantity: 2<br>
+                                Part Number: COR-3370
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">Filter Tips (200μL)</div>
+                            <div class="consumable-details">
+                                Type: 200μL filter tips<br>
+                                Quantity: 96<br>
+                                Part Number: TIPS-200F
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">Large Bore Tips (1000μL)</div>
+                            <div class="consumable-details">
+                                Type: 1000μL tips<br>
+                                Quantity: 8<br>
+                                Part Number: TIPS-1000
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">PCR Seal</div>
+                            <div class="consumable-details">
+                                Quantity: 1<br>
+                                Part Number: BIO-MSB1001<br>
+                                Vendor: Bio-Rad
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">Storage Seals</div>
+                            <div class="consumable-details">
+                                Quantity: 2<br>
+                                Part Number: VWR-60941-126
+                            </div>
+                        </div>
+                        <div class="consumable-item">
+                            <div class="consumable-title">Reagent Reservoirs</div>
+                            <div class="consumable-details">
+                                Quantity: 4<br>
+                                Part Number: VWR-89094-662
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function goBackToAssays() {
+            window.location.href = 'assays.html';
+
+        }
+
+        function printAssay() {
+            window.print();
+
+        }
+
+        function exportAssay() {
+            // Simulate export functionality
+            const exportMessage = `Assay details exported successfully to:\nZ:\\Shared\\Assays\\BDpTau-217_Assay_Details_${new Date().toISOString().split('T')[0]}.pdf`;
+
+            // Create notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4caf50;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 4px;
+                z-index: 1000;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                font-weight: bold;
+            `;
+            notification.textContent = 'Assay details exported successfully!';
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+
+        }
+            }, 3000);
+
+        }
+
+        // Update datetime
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+            }) + ' ' + now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            document.querySelector('.datetime').textContent = dateTimeString;
+
+        }
+
+        // Update datetime every minute
+        setInterval(updateDateTime, 60000);
+        updateDateTime();
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to RUO mode?")) {
+                window.location.href = "login-ruo.html";
+            }
+        }
+    </script>
+</body>
+</html>

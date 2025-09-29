@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Test Report - ARGO HT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                font-size: 12px;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .report-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Header Navigation (No Print) */
+        .header-nav {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: #555;
+        }
+
+        .nav-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: 1px solid #007acc;
+            border-radius: 4px;
+            background: white;
+            color: #007acc;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: #007acc;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #007acc;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #005a99;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eee;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Report Container */
+        .report-container {
+            max-width: 8.5in;
+            margin: 20px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        /* Laboratory Header */
+        .lab-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+
+        .lab-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .lab-address {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .report-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007acc;
+            margin-top: 16px;
+        }
+
+        /* Section Styling */
+        .report-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Tables */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .info-table th,
+        .info-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .info-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-table td {
+            background: white;
+        }
+
+        .info-table .field-label {
+            font-weight: bold;
+            background: #f0f0f0;
+            width: 30%;
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 12px;
+        }
+
+        .results-table th {
+            background: #007acc;
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #005a99;
+        }
+
+        .results-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        .results-table tr:nth-child(even) td {
+            background: #f9f9f9;
+        }
+
+        /* Status Styling */
+        .status-normal {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .status-abnormal {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .status-elevated {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .qc-pass {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        /* Authorization Section */
+        .authorization {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .signature-line {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .signature-block {
+            text-align: center;
+            width: 45%;
+        }
+
+        .signature-space {
+            border-bottom: 1px solid #333;
+            height: 40px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .e-signature {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 4px;
+            padding: 8px;
+            font-weight: bold;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .signature-pending {
+            border-bottom: 1px solid #ccc;
+            height: 40px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            background: #f9f9f9;
+        }
+
+        .sign-button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .sign-button:hover {
+            background: #1976d2;
+        }
+
+        .status-draft {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .status-signed {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        /* E-Signature Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            text-align: center;
+            color: #333;
+        }
+
+        .modal-field {
+            margin-bottom: 16px;
+        }
+
+        .modal-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #2196f3;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-btn-cancel {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-btn-sign {
+            background: #2196f3;
+            color: white;
+        }
+
+        .modal-btn-sign:hover {
+            background: #1976d2;
+        }
+
+        .modal-error {
+            color: #d32f2f;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .e-signature-icon {
+            color: #4caf50;
+            font-size: 16px;
+        }
+
+        .signature-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Regulatory Footer */
+        .regulatory-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+            text-align: center;
+        }
+
+        .regulatory-footer-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+
+        /* Special formatting */
+        .threshold-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .critical-value {
+            background: #ffebee;
+            border: 1px solid #f8bbd9;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header no-print">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()" style="cursor: pointer;">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()" style="cursor: pointer;">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs (No Print) -->
+    <div class="nav-tabs no-print">
+        <div class="nav-tab" onclick="window.location.href='main-layout-home-with-run.html'">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab active">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab" onclick="window.location.href='assays.html'">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab" onclick="window.location.href='settings.html'">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="window.location.href='support.html'">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Report Actions (No Print) -->
+    <div class="no-print" style="background: white; padding: 16px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="back-btn" onclick="goBack()">← Back to Results</button>
+            <div style="font-size: 18px; font-weight: bold; color: #333;">Clinical Test Report</div>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <button class="action-btn" onclick="printReport()">🖨️ Print</button>
+            <button class="action-btn primary" onclick="exportReport()">📤 Export to Shared Folder</button>
+        </div>
+    </div>
+
+    <!-- Report Container -->
+    <div class="report-container">
+        <!-- Laboratory Header -->
+        <div class="lab-header">
+            <div class="report-title" id="reportTitle">Clinical Test Report: NULISAqPCR™ BDpTau-217 Assay v1.0</div>
+            <div style="text-align: right; margin-top: 8px; font-size: 14px;">
+                <span>Report Status: </span>
+                <span id="reportStatus" class="status-draft">DRAFT</span>
+            </div>
+        </div>
+
+        <!-- Sample Details & Dates -->
+        <div class="report-section">
+            <div class="section-title">Sample Details & Dates</div>
+            <table class="info-table">
+                <tr>
+                    <td class="field-label">Unique Sample ID</td>
+                    <td id="sampleId">BDP-2025-1223-001</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Specimen Type</td>
+                    <td>Plasma (K₂EDTA)</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Result Date/Time</td>
+                    <td id="resultDate">2025-12-23 16:45 PST</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Test Results -->
+        <div class="report-section">
+            <div class="section-title">Test Results</div>
+
+            <div class="threshold-info">
+                <strong>Reference Interval / Decision Threshold:</strong><br>
+                Reference Interval: ≤ 0.10 pg/mL (verification study)<br>
+                Decision Threshold: 0.28 pg/mL (clinical cutoff for elevated levels)
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Sample Plate Well</th>
+                        <th>Assay Plate Well ID</th>
+                        <th>Concentration</th>
+                        <th>Units</th>
+                        <th>QC Status</th>
+                        <th>Results Flag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sample1</td>
+                        <td>A1</td>
+                        <td>A1-001</td>
+                        <td>0.31</td>
+                        <td>pg/mL</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-abnormal">ELEVATED</td>
+                    </tr>
+                    <tr>
+                        <td>Sample2</td>
+                        <td>A2</td>
+                        <td>A2-002</td>
+                        <td>0.85</td>
+                        <td>pg/mL</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-abnormal">ELEVATED</td>
+                    </tr>
+                    <tr>
+                        <td>Sample3</td>
+                        <td>A3</td>
+                        <td>A3-003</td>
+                        <td>0.15</td>
+                        <td>pg/mL</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-normal">NORMAL</td>
+                    </tr>
+                    <tr>
+                        <td>Sample4</td>
+                        <td>A4</td>
+                        <td>A4-004</td>
+                        <td>0.62</td>
+                        <td>pg/mL</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-abnormal">ELEVATED</td>
+                    </tr>
+                    <tr>
+                        <td>Control Pos</td>
+                        <td>B1</td>
+                        <td>B1-CP</td>
+                        <td>1.85</td>
+                        <td>pg/mL</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-normal">NORMAL</td>
+                    </tr>
+                    <tr>
+                        <td>Control Neg</td>
+                        <td>B2</td>
+                        <td>B2-CN</td>
+                        <td>0.03</td>
+                        <td>pg/mL</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-normal">NORMAL</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- QC Status -->
+        <div class="report-section">
+            <div class="section-title">Control QC Status</div>
+            <div class="qc-pass">
+                Positive Control: 1.85 pg/mL (Expected: 1.75 ± 0.25 pg/mL) - PASS<br>
+                Negative Control: 0.03 pg/mL (Expected: ≤ 0.05 pg/mL) - PASS
+            </div>
+        </div>
+
+        <!-- Assay/Versioning -->
+        <div class="report-section">
+            <div class="section-title">Assay / Versioning</div>
+            <table class="info-table">
+                <tr>
+                    <td class="field-label">Assay Name</td>
+                    <td>BDpTau217</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Assay Version</td>
+                    <td>BDpTau217_IVD v1.0</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Kit/Reagent Lot</td>
+                    <td>NULISA-BDP217-LOT2025A (exp. 2026-03-15)</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Software Version</td>
+                    <td>ARGO DX ICS v2.1.0</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Instrument & Run Traceability -->
+        <div class="report-section">
+            <div class="section-title">Instrument & Run Traceability</div>
+            <table class="info-table">
+                <tr>
+                    <td class="field-label">Instrument Platform</td>
+                    <td>ARGO DX System</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Model Number</td>
+                    <td>ARGO-DX-001</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Serial Number</td>
+                    <td>ADX-2024-0547</td>
+                </tr>
+                <tr>
+                    <td class="field-label">UDI-DI</td>
+                    <td>(01)00850024007083</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Run ID</td>
+                    <td id="runId">RUN-20251223-0034</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Run Start Time</td>
+                    <td>2025-12-23 09:15:42</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Run End Time</td>
+                    <td>2025-12-23 11:47:18</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Run Started By</td>
+                    <td>xiaojun8</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Authorization -->
+        <div class="authorization">
+            <div class="section-title">Authorization</div>
+            <div class="signature-line">
+                <div class="signature-block" style="width: 100%; text-align: center;">
+                    <div class="signature-label">E-Signature / Date-Time</div>
+                    <div id="signatureContainer">
+                        <div class="signature-pending">Awaiting Signature</div>
+                        <button class="sign-button" onclick="applySignature()">Apply E-Signature</button>
+                    </div>
+                    <div id="signatureDate" style="display: none;">2025-12-23 16:45 PST</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Regulatory Statements -->
+        <div class="regulatory-footer">
+            <div class="regulatory-footer-text">For In Vitro Diagnostic Use.</div>
+            <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                This test has been performed in accordance with FDA regulations for in vitro diagnostic devices.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample report data mapping
+        const reportData = {
+            '20251223-1545_Bay1_BDpTau217': {
+                title: 'Clinical Test Report: NULISAqPCR™ BDpTau-217 Assay v1.0',
+                sampleId: 'BDP-2025-1223-001',
+                runId: 'RUN-20251223-0034'
+            },
+            '20250723-1433_Bay2_IL4': {
+                title: 'Clinical Test Report: NULISAqPCR™ IL4 Assay v2.1',
+                sampleId: 'IL4-2025-1223-002',
+                runId: 'RUN-20251223-0035'
+            }
+        };
+
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function goBack() {
+            window.location.href = 'run-details.html';
+
+        }
+
+        function printReport() {
+            window.print();
+
+        }
+
+        function exportReport() {
+            // Simulate export to shared folder
+            const exportMessage = `Report exported successfully to:\nZ:\\Shared\\Reports\\Clinical_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+
+            // Create a temporary notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4caf50;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 4px;
+                z-index: 1000;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                font-weight: bold;
+            `;
+            notification.textContent = 'Report exported to shared folder successfully!';
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+
+        }
+
+        // Load report data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportRunId = localStorage.getItem('reportRunId') || '20251223-1545_Bay1_BDpTau217';
+            const report = reportData[reportRunId] || reportData['20251223-1545_Bay1_BDpTau217'];
+
+            // Update report content
+            document.getElementById('reportTitle').textContent = report.title;
+            document.getElementById('sampleId').textContent = report.sampleId;
+            document.getElementById('runId').textContent = report.runId;
+
+            // Set current dates
+            const now = new Date();
+            const dateString = now.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'America/Los_Angeles',
+                timeZoneName: 'short'
+            });
+
+            document.getElementById('resultDate').textContent = dateString;
+        });
+
+        // E-Signature functionality
+        function applySignature() {
+            showSignatureModal();
+
+        }
+
+        function showSignatureModal() {
+            const currentUser = 'xiaojun8'; // In real app, get from session/auth
+
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-title">E-Signature Authentication</div>
+                    <div class="modal-field">
+                        <label class="modal-label">Username</label>
+                        <input type="text" class="modal-input" value="${currentUser}" readonly>
+                    </div>
+                    <div class="modal-field">
+                        <label class="modal-label">Password</label>
+                        <input type="password" class="modal-input" id="signaturePassword" placeholder="Enter your password">
+                        <div id="passwordError" class="modal-error" style="display: none;">Please enter your password</div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn modal-btn-cancel" onclick="closeSignatureModal()">Cancel</button>
+                        <button class="modal-btn modal-btn-sign" onclick="confirmSignature('${currentUser}')">Apply Signature</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Focus on password field
+            setTimeout(() => {
+                document.getElementById('signaturePassword').focus();
+            }, 100);
+
+            // Allow Enter key to submit
+            document.getElementById('signaturePassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    confirmSignature(currentUser);
+
+        }
+            });
+
+        }
+
+        function closeSignatureModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                document.body.removeChild(modal);
+
+        }
+
+        }
+
+        function confirmSignature(username) {
+            const password = document.getElementById('signaturePassword').value;
+            const errorDiv = document.getElementById('passwordError');
+
+            if (!password.trim()) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'Please enter your password';
+                return;
+
+        }
+
+            // In real app, validate password against auth system
+            // For demo, accept any non-empty password
+
+            // Close modal
+            closeSignatureModal();
+
+            // Apply signature
+            applyDigitalSignature(username);
+
+        }
+
+        function applyDigitalSignature(username) {
+            const now = new Date();
+            const dateString = now.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }) + ' ' + now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            });
+
+            // Create signed signature container
+            const signatureContainer = document.getElementById('signatureContainer');
+            signatureContainer.innerHTML = `
+                <div class="e-signature">
+                    <span class="e-signature-icon">🔒</span>
+                    <div>
+                        <div>/s/ ${username}</div>
+                        <div style="font-size: 11px; color: #666;">E-Signature Applied</div>
+                    </div>
+                </div>
+            `;
+
+            // Show and update signature date
+            const signatureDate = document.getElementById('signatureDate');
+            signatureDate.textContent = dateString;
+            signatureDate.style.display = 'block';
+
+            // Update report status
+            const reportStatus = document.getElementById('reportStatus');
+            reportStatus.textContent = 'SIGNED AND RELEASED';
+            reportStatus.className = 'status-signed';
+
+            // Show success message
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #4caf50;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                font-weight: bold;
+                z-index: 1001;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            notification.textContent = `Report successfully signed by ${username}!`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+
+        }
+            }, 3000);
+
+        }
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to RUO mode?")) {
+                window.location.href = "login-ruo.html";
+            }
+        }
+    </script>
+</body>
+</html>

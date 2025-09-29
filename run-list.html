@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eee;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+            height: calc(100vh - 104px);
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .page-counter {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Filter and Action Controls */
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .filter-btn.active {
+            background: #007acc;
+            color: white;
+            border-color: #007acc;
+        }
+
+        .action-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Results Table */
+        .table-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .results-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        .results-table tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .results-table tbody tr:hover {
+            background-color: #f0f8ff;
+        }
+
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Columns */
+        .status-complete {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-running {
+            color: #007acc;
+            font-weight: bold;
+        }
+
+        .status-aborted {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .qc-pass {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .qc-warning {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .qc-fail {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Column Widths */
+        .col-run-name { width: 20%; }
+        .col-assay { width: 15%; }
+        .col-bay { width: 8%; }
+        .col-start-time { width: 12%; }
+        .col-completion { width: 12%; }
+        .col-status { width: 10%; }
+        .col-qc { width: 10%; }
+        .col-operator { width: 13%; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab" onclick="goHome()">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab active">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab" onclick="goToAssays()">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab" onclick="goToSettings()">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="goToSupport()">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="results-header">
+            <div class="results-title">Results View</div>
+            <div class="page-counter">14 / 28</div>
+        </div>
+
+        <div class="controls-row">
+            <div class="filter-controls">
+                <button class="filter-btn active" onclick="filterToday()">Today</button>
+                <button class="filter-btn" onclick="showFilterMenu()">▼ Filter</button>
+            </div>
+            <div class="action-controls">
+                <button class="action-btn" onclick="exportResults()">Export</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th class="col-run-name">Run Name</th>
+                        <th class="col-assay">Assay(s)</th>
+                        <th class="col-bay">Bay</th>
+                        <th class="col-start-time">Run Start</th>
+                        <th class="col-completion">Run Completion</th>
+                        <th class="col-status">Status</th>
+                        <th class="col-qc">QC Status</th>
+                        <th class="col-operator">Operator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="goToRunDetails('AAA08/12/2025Run001')">
+                        <td>AAA08/12/2025Run001</td>
+                        <td>BD-pTau-217 IVD</td>
+                        <td>Bay 1</td>
+                        <td>08/12/2025 8:30 AM</td>
+                        <td>08/12/2025 11:15 AM</td>
+                        <td class="status-complete">Complete</td>
+                        <td class="qc-pass">Pass</td>
+                        <td>Admin1</td>
+                    </tr>
+                    <tr onclick="goToRunDetails('AAA08/12/2025Run002')">
+                        <td>AAA08/12/2025Run002</td>
+                        <td>BD-pTau-217 IVD</td>
+                        <td>Bay 1</td>
+                        <td>08/12/2025 9:15 AM</td>
+                        <td>08/12/2025 12:12 PM</td>
+                        <td class="status-complete">Complete</td>
+                        <td class="qc-warning">Review</td>
+                        <td>Internal</td>
+                    </tr>
+                    <tr onclick="goToRunDetails('T808/12/2025Run003')">
+                        <td>T808/12/2025Run003</td>
+                        <td>NULISAseq Panel</td>
+                        <td>Bay 2</td>
+                        <td>08/12/2025 2:00 PM</td>
+                        <td>08/12/2025 3:15 PM</td>
+                        <td class="status-aborted">Aborted</td>
+                        <td class="qc-fail">Fail</td>
+                        <td>Operator</td>
+                    </tr>
+                    <tr onclick="goToRunDetails('T908/12/2025Run004')">
+                        <td>T908/12/2025Run004</td>
+                        <td>BD-pTau-217 IVD</td>
+                        <td>Bay 3</td>
+                        <td>08/12/2025 1:20 PM</td>
+                        <td>08/12/2025 4:15 PM</td>
+                        <td class="status-complete">Complete</td>
+                        <td class="qc-pass">Pass</td>
+                        <td>Admin1</td>
+                    </tr>
+                    <tr onclick="goToRunDetails('20251223-1545_Bay1_BDpTau217')">
+                        <td>20251223-1545_Bay1_BDpTau217</td>
+                        <td>BD-pTau-217 IVD</td>
+                        <td>Bay 1</td>
+                        <td>12/23/2025 3:45 PM</td>
+                        <td>12/23/2025 4:45 PM</td>
+                        <td class="status-complete">Complete</td>
+                        <td class="qc-pass">Pass</td>
+                        <td>xiaojun8</td>
+                    </tr>
+                    <tr onclick="goToRunDetails('20250723-1433_Bay2_IL4')">
+                        <td>20250723-1433_Bay2_IL4</td>
+                        <td>IL4</td>
+                        <td>Bay 2</td>
+                        <td>12/23/2025 1:33 PM</td>
+                        <td>12/23/2025 4:50 PM</td>
+                        <td class="status-complete">Complete</td>
+                        <td class="qc-pass">Pass</td>
+                        <td>xiaojun8</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Navigation Functions
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+        }
+
+        function goToAssays() {
+            window.location.href = 'assays.html';
+        }
+
+        function goToSettings() {
+            window.location.href = 'settings.html';
+        }
+
+        function goToSupport() {
+            window.location.href = 'support.html';
+        }
+
+        // Run Details Navigation - Main Function
+        function goToRunDetails(runId) {
+            console.log('Navigating to run details for:', runId);
+            localStorage.setItem('selectedRunId', runId);
+            window.location.href = 'run-details.html';
+        }
+
+        // Mode Switching
+        function showModeSwitch() {
+            if (confirm('Are you sure you want to switch to RUO mode?')) {
+                window.location.href = 'login-ruo.html';
+            }
+        }
+
+        // Filter Functions
+        function filterToday() {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            console.log('Filtering to today');
+        }
+
+        function showFilterMenu() {
+            console.log('Show filter menu');
+            // Filter menu implementation
+        }
+
+        // Action Functions
+        function exportResults() {
+            console.log('Exporting results');
+            alert('Results exported successfully!');
+        }
+
+        // Update datetime
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+            }) + ' ' + now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            document.querySelector('.datetime').textContent = dateTimeString;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+            console.log('Run list page loaded');
+        });
+    </script>
+</body>
+</html>

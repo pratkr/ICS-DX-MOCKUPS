@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #eee;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            height: calc(100vh - 104px);
+        }
+
+        /* Settings Sidebar */
+        .settings-sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .settings-nav {
+            list-style: none;
+        }
+
+        .settings-nav-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-nav-link {
+            display: block;
+            padding: 16px 20px;
+            color: #666;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-nav-link:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .settings-nav-link.active {
+            background: #007acc;
+            color: white;
+            border-right: 3px solid #005a99;
+        }
+
+        .settings-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .settings-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .section-content {
+            padding: 20px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            max-width: 400px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #007acc;
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            max-width: 300px;
+            background: white;
+        }
+
+        .form-checkbox {
+            margin-right: 8px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .form-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .btn-primary {
+            background: #007acc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #005a99;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-connected {
+            background: #28a745;
+        }
+
+        .status-disconnected {
+            background: #dc3545;
+        }
+
+        .status-warning {
+            background: #ffc107;
+        }
+
+        /* Tables */
+        .settings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .settings-table th,
+        .settings-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .settings-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Network Status Cards */
+        .network-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .network-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .network-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .network-card-title {
+            font-weight: bold;
+            color: #333;
+            margin-left: 8px;
+        }
+
+        .network-info {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        /* Hidden content sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 500px;
+            max-width: 90%;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .modal-form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Run List Styles */
+        .run-list-item:hover {
+            background-color: #f8f9fa !important;
+        }
+
+        .run-list-item.selected {
+            background-color: #007acc !important;
+            color: white;
+        }
+
+        .run-list-item.selected span {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()" style="cursor: pointer;">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator" onclick="showModeSwitch()" style="cursor: pointer;">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab" onclick="goHome()">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab" onclick="window.location.href='run-list.html'">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab" onclick="window.location.href='assays.html'">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab active">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab" onclick="window.location.href='support.html'">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Settings Sidebar -->
+        <div class="settings-sidebar">
+            <ul class="settings-nav">
+                <li class="settings-nav-item">
+                    <a href="#" class="settings-nav-link active" onclick="showSection('general')">
+                        <span class="settings-icon">🔧</span>
+                        General
+                    </a>
+                </li>
+                <li class="settings-nav-item">
+                    <a href="#" class="settings-nav-link" onclick="showSection('users')">
+                        <span class="settings-icon">👥</span>
+                        User Management
+                    </a>
+                </li>
+                <li class="settings-nav-item">
+                    <a href="#" class="settings-nav-link" onclick="showSection('network')">
+                        <span class="settings-icon">🌐</span>
+                        Network & Backup
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+            <!-- General Settings -->
+            <div id="general" class="content-section active">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">System Information</div>
+                        <div class="section-subtitle">Current system status and version information</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label class="form-label">Instrument Name</label>
+                            <input type="text" class="form-input" value="ARGO-Lab-01" placeholder="Enter instrument name">
+                            <div class="form-description">Custom name for this instrument (can be edited)</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Instrument Model</label>
+                            <input type="text" class="form-input" value="ARGO DX System" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Serial Number</label>
+                            <input type="text" class="form-input" value="ADX-2024-0547" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Software Version</label>
+                            <input type="text" class="form-input" value="IVD v1.2.0.0" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Updated</label>
+                            <input type="text" class="form-input" value="2025-11-15 14:30:00" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">Display & Interface</div>
+                        <div class="section-subtitle">Configure display preferences and interface settings</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label class="form-label">Language</label>
+                            <select class="form-select">
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="de">Deutsch</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Time Zone</label>
+                            <select class="form-select">
+                                <option value="PST">Pacific Standard Time (PST)</option>
+                                <option value="EST">Eastern Standard Time (EST)</option>
+                                <option value="CST">Central Standard Time (CST)</option>
+                                <option value="MST">Mountain Standard Time (MST)</option>
+                                <option value="UTC">Coordinated Universal Time (UTC)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date Format</label>
+                            <select class="form-select">
+                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="autoSave" class="form-checkbox" checked>
+                                <label for="autoSave">Enable auto-save for runs</label>
+                            </div>
+                            <div class="form-description">Automatically save run configurations every 5 minutes</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="notifications" class="form-checkbox" checked>
+                                <label for="notifications">Enable system notifications</label>
+                            </div>
+                            <div class="form-description">Show notifications for run completion, errors, and system alerts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">Data & Storage</div>
+                        <div class="section-subtitle">Configure data retention and storage preferences</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label class="form-label">Data Retention Period</label>
+                            <select class="form-select">
+                                <option value="30">30 days</option>
+                                <option value="90" selected>90 days</option>
+                                <option value="180">180 days</option>
+                                <option value="365">1 year</option>
+                                <option value="forever">Forever</option>
+                            </select>
+                            <div class="form-description">Automatically delete run data after specified period</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Storage Location</label>
+                            <input type="text" class="form-input" value="C:\ARGO_Data\" placeholder="Enter storage path">
+                            <div class="form-description">Local directory for storing run data and results</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; padding: 20px 0;">
+                    <button class="btn btn-secondary">Reset to Defaults</button>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+
+            <!-- User Management -->
+            <div id="users" class="content-section">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">User Accounts</div>
+                        <div class="section-subtitle">Manage user accounts and permissions for IVD system access</div>
+                    </div>
+                    <div class="section-content">
+                        <div style="margin-bottom: 16px;">
+                            <button class="btn btn-primary">Add New User</button>
+                        </div>
+
+                        <table class="settings-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Role</th>
+                                    <th>Last Login</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>xiaojun8</td>
+                                    <td>Xiaojun Wang</td>
+                                    <td>Supervisor</td>
+                                    <td>2025-12-23 15:45</td>
+                                    <td><span class="status-indicator status-connected"></span>Active</td>
+                                    <td>
+                                        <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Edit</button>
+                                        <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;">Disable</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>lab_tech1</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>Operator</td>
+                                    <td>2025-12-23 09:15</td>
+                                    <td><span class="status-indicator status-connected"></span>Active</td>
+                                    <td>
+                                        <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Edit</button>
+                                        <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;">Disable</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>tech_admin</td>
+                                    <td>Michael Chen</td>
+                                    <td>Technician</td>
+                                    <td>2025-12-22 16:30</td>
+                                    <td><span class="status-indicator status-disconnected"></span>Inactive</td>
+                                    <td>
+                                        <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Edit</button>
+                                        <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Enable</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">Security Settings</div>
+                        <div class="section-subtitle">Configure authentication and security policies</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label class="form-label">Password Policy</label>
+                            <select class="form-select">
+                                <option value="basic">Basic (8+ characters)</option>
+                                <option value="strong" selected>Strong (8+ chars, mixed case, numbers, symbols)</option>
+                                <option value="enterprise">Enterprise (12+ chars, complex requirements)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Session Timeout (minutes)</label>
+                            <input type="number" class="form-input" value="30" min="5" max="480">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="twoFactor" class="form-checkbox">
+                                <label for="twoFactor">Enable two-factor authentication</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="auditLog" class="form-checkbox" checked>
+                                <label for="auditLog">Enable audit logging</label>
+                            </div>
+                            <div class="form-description">Log all user actions for compliance and security</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; padding: 20px 0;">
+                    <button class="btn btn-primary">Save User Settings</button>
+                </div>
+            </div>
+
+            <!-- Network & Backup -->
+            <div id="network" class="content-section">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">🖥️ Network Drives</div>
+                        <div class="section-subtitle">Configure network drive mappings for data storage and export</div>
+                    </div>
+                    <div class="section-content">
+                        <table class="settings-table" id="networkDrivesTable">
+                            <thead>
+                                <tr>
+                                    <th>Server Name</th>
+                                    <th>Server Path</th>
+                                    <th>Local Path</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>\\FileShare</td>
+                                    <td>Exports</td>
+                                    <td>Z:\</td>
+                                    <td><span class="status-indicator status-connected"></span>Connected</td>
+                                    <td>
+                                        <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Disconnect</button>
+                                        <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>\\FileShare</td>
+                                    <td>Imports</td>
+                                    <td>X:\</td>
+                                    <td><span class="status-indicator status-connected"></span>Connected</td>
+                                    <td>
+                                        <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Disconnect</button>
+                                        <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="margin-top: 16px; text-align: right;">
+                            <button class="btn btn-primary" onclick="showAddNetworkDriveModal()">Add</button>
+                            <button class="btn btn-secondary">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">Automatic Backup Configuration</div>
+                        <div class="section-subtitle">Configure scheduled backup settings</div>
+                    </div>
+                    <div class="section-content">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="postRunBackup" class="form-checkbox" onchange="toggleBackupMode()">
+                                <label for="postRunBackup">Enable Post-Run Backup</label>
+                            </div>
+                            <div class="form-description">Automatically backup data at the end of every run completion</div>
+                        </div>
+
+                        <div id="scheduledBackupControls" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label class="form-label">Recurrence</label>
+                                <select class="form-select" id="recurrenceSelect">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly" selected>Monthly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Time of Day</label>
+                                <select class="form-select" id="timeSelect">
+                                    <option value="00:00" selected>12:00 AM</option>
+                                    <option value="01:00">1:00 AM</option>
+                                    <option value="02:00">2:00 AM</option>
+                                    <option value="03:00">3:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="23:00">11:00 PM</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Day of Week</label>
+                                <select class="form-select" id="daySelect">
+                                    <option value="sunday" selected>Sunday</option>
+                                    <option value="monday">Monday</option>
+                                    <option value="tuesday">Tuesday</option>
+                                    <option value="wednesday">Wednesday</option>
+                                    <option value="thursday">Thursday</option>
+                                    <option value="friday">Friday</option>
+                                    <option value="saturday">Saturday</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Backup File Location</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" class="form-input" value="D:\Backups\" style="flex: 1;">
+                                <button class="btn btn-secondary">Browse</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Select Run Data to Backup</label>
+                            <div style="border: 1px solid #ddd; border-radius: 4px; max-height: 200px; overflow-y: auto; background: white;">
+                                <div class="run-list-item" onclick="toggleRunSelection(this)" data-run="run-20241201-001">
+                                    <div style="padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Run 20241201-001 - BDpTau-217 Assay</span>
+                                        <span style="color: #666; font-size: 12px;">2024-12-01 14:30</span>
+                                    </div>
+                                </div>
+                                <div class="run-list-item" onclick="toggleRunSelection(this)" data-run="run-20241202-002">
+                                    <div style="padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee;">
+                                        <span>Run 20241202-002 - BDpTau-217 Assay</span>
+                                        <span style="color: #666; font-size: 12px;">2024-12-02 09:15</span>
+                                    </div>
+                                </div>
+                                <div class="run-list-item" onclick="toggleRunSelection(this)" data-run="run-20241203-003">
+                                    <div style="padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee;">
+                                        <span>Run 20241203-003 - BDpTau-217 Assay</span>
+                                        <span style="color: #666; font-size: 12px;">2024-12-03 16:45</span>
+                                    </div>
+                                </div>
+                                <div class="run-list-item" onclick="toggleRunSelection(this)" data-run="run-20241204-004">
+                                    <div style="padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee;">
+                                        <span>Run 20241204-004 - NULISAseq Panel</span>
+                                        <span style="color: #666; font-size: 12px;">2024-12-04 11:20</span>
+                                    </div>
+                                </div>
+                                <div class="run-list-item" onclick="toggleRunSelection(this)" data-run="run-20241205-005">
+                                    <div style="padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee;">
+                                        <span>Run 20241205-005 - BDpTau-217 Assay</span>
+                                        <span style="color: #666; font-size: 12px;">2024-12-05 13:10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 12px; text-align: right;">
+                                <button class="btn btn-primary" onclick="backupSelectedRuns()">Backup Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="text-align: right; padding: 20px 0;">
+                    <button class="btn btn-primary">Save Network Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Network Drive Modal -->
+    <div id="addNetworkDriveModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">Add Network Drive</div>
+            <form>
+                <div class="modal-form-row">
+                    <div class="form-group">
+                        <label class="form-label">Server Name</label>
+                        <input type="text" class="form-input" value="\\FileShare" placeholder="\\ServerName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Server Path</label>
+                        <input type="text" class="form-input" value="Images" placeholder="SharedFolder">
+                    </div>
+                </div>
+
+                <div class="modal-form-row">
+                    <div class="form-group">
+                        <label class="form-label">User Name</label>
+                        <input type="text" class="form-input" value="labuser" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Server Password</label>
+                        <div class="password-field">
+                            <input type="password" class="form-input" id="serverPassword" value="****************" placeholder="Password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('serverPassword')">👁</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Local Path</label>
+                    <select class="form-select">
+                        <option value="F:\" selected>F:\</option>
+                        <option value="G:\">G:\</option>
+                        <option value="H:\">H:\</option>
+                        <option value="I:\">I:\</option>
+                        <option value="J:\">J:\</option>
+                    </select>
+                </div>
+            </form>
+
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeAddNetworkDriveModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="connectNetworkDrive()">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function showSection(sectionId) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.settings-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked nav link
+            event.target.classList.add('active');
+
+        }
+
+
+        // Update datetime
+        function updateDateTime() {
+            const now = new Date();
+            const dateTimeString = now.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+            }) + ' ' + now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            document.querySelector('.datetime').textContent = dateTimeString;
+
+        }
+
+        // Update datetime every minute
+        setInterval(updateDateTime, 60000);
+        updateDateTime();
+
+        // Network Drive Modal Functions
+        function showAddNetworkDriveModal() {
+            document.getElementById('addNetworkDriveModal').style.display = 'flex';
+
+        }
+
+        function closeAddNetworkDriveModal() {
+            document.getElementById('addNetworkDriveModal').style.display = 'none';
+
+        }
+
+        function connectNetworkDrive() {
+            // Simulate network drive connection
+            closeAddNetworkDriveModal();
+
+            // Add new row to table (simplified simulation)
+            const tableBody = document.querySelector('#networkDrivesTable tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>\\\\FileShare</td>
+                <td>Images</td>
+                <td>F:\\</td>
+                <td><span class="status-indicator status-connected"></span>Connected</td>
+                <td>
+                    <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Disconnect</button>
+                    <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;">Remove</button>
+                </td>
+            `;
+
+            // Show success message
+            alert('Network drive connected successfully!');
+
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+            } else {
+                field.type = 'password';
+
+        }
+
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('addNetworkDriveModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddNetworkDriveModal();
+
+        }
+        });
+
+        // Run selection functionality
+        function toggleRunSelection(element) {
+            element.classList.toggle('selected');
+
+        }
+
+        function backupSelectedRuns() {
+            const selectedRuns = document.querySelectorAll('.run-list-item.selected');
+            if (selectedRuns.length === 0) {
+                alert('Please select at least one run to backup.');
+                return;
+
+        }
+
+            const runNames = Array.from(selectedRuns).map(item =>
+                item.getAttribute('data-run')
+            );
+
+            alert(`Backup initiated for ${selectedRuns.length} selected run(s):\n${runNames.join('\n')}`);
+
+            // Clear selections after backup
+            selectedRuns.forEach(item => item.classList.remove('selected'));
+
+        }
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to RUO mode?")) {
+                window.location.href = "login-ruo.html";
+            }
+        }
+
+        function toggleBackupMode() {
+            const postRunCheckbox = document.getElementById('postRunBackup');
+            const scheduledControls = document.getElementById('scheduledBackupControls');
+            const recurrenceSelect = document.getElementById('recurrenceSelect');
+            const timeSelect = document.getElementById('timeSelect');
+            const daySelect = document.getElementById('daySelect');
+
+            if (postRunCheckbox.checked) {
+                // Post-run backup enabled - disable and dim scheduled controls
+                scheduledControls.style.opacity = '0.5';
+                scheduledControls.style.pointerEvents = 'none';
+                recurrenceSelect.disabled = true;
+                timeSelect.disabled = true;
+                daySelect.disabled = true;
+            } else {
+                // Post-run backup disabled - enable scheduled controls
+                scheduledControls.style.opacity = '1';
+                scheduledControls.style.pointerEvents = 'auto';
+                recurrenceSelect.disabled = false;
+                timeSelect.disabled = false;
+                daySelect.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Bay 2 Load</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(45, 55, 72, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .settings-icon, .link-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 24px;
+            height: calc(100vh - 70px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .run-header {
+            margin-bottom: 32px;
+        }
+
+        .run-id {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .run-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .assay-label {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .assay-name {
+            font-size: 18px;
+            color: #e2e8f0;
+        }
+
+        .bay-number {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 72px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Loading Section */
+        .loading-section {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .checklist-container {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .load-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .load-bracket {
+            font-size: 24px;
+            color: #4299e1;
+            font-weight: bold;
+        }
+
+        .load-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .item-status.complete {
+            background: #48bb78;
+            color: white;
+        }
+
+        .item-number {
+            font-size: 14px;
+            font-weight: bold;
+            color: #a0aec0;
+            min-width: 12px;
+        }
+
+        .item-name {
+            font-size: 14px;
+            color: white;
+            flex: 1;
+        }
+
+        .all-items-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #48bb78;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #48bb78;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Diagram Section */
+        .diagram-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bay-diagram {
+            width: 300px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .diagram-element {
+            position: absolute;
+            border: 2px solid white;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .id-plate { top: 20px; left: 20px; width: 80px; height: 30px; }
+        .detection-plate { top: 60px; left: 20px; width: 80px; height: 30px; }
+        .target-plate { top: 100px; left: 20px; width: 80px; height: 30px; }
+        .sample-plate { top: 140px; left: 20px; width: 80px; height: 30px; }
+        .consumables { top: 60px; right: 60px; width: 40px; height: 80px; }
+        .tip-boxes { top: 20px; right: 20px; width: 30px; height: 120px; }
+
+        .diagram-labels {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: 120px;
+        }
+
+        .diagram-label {
+            font-size: 12px;
+            color: #a0aec0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .label-number {
+            width: 20px;
+            height: 20px;
+            border: 1px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Action Button */
+        .action-button {
+            width: 100%;
+            max-width: 400px;
+            height: 56px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .action-button:hover {
+            background: #3182ce;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <button class="back-btn" onclick="goBack()">
+                ← BACK
+            </button>
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()" style="cursor: pointer;">
+        </div>
+        <div class="header-right">
+            <div class="settings-icon"></div>
+            <div class="link-icon"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="bay-number">2</div>
+
+        <div class="run-header">
+            <div class="run-id">Run ID</div>
+            <div class="run-name">20250723-1433_Bay2_IL4</div>
+            <div class="assay-label">Assay</div>
+            <div class="assay-name">IL4</div>
+        </div>
+
+        <div class="loading-section">
+            <div class="checklist-container">
+                <div class="section-title">Assay Run Loading Checklist</div>
+
+                <div class="load-indicator">
+                    <div class="load-bracket">⟨</div>
+                    <div class="load-text">LOAD</div>
+                </div>
+
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <div class="item-status complete">✓</div>
+                        <div class="item-number">1</div>
+                        <div class="item-name">ID Plate</div>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="item-status complete">✓</div>
+                        <div class="item-number">2</div>
+                        <div class="item-name">Detection Plate</div>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="item-status complete">✓</div>
+                        <div class="item-number">3</div>
+                        <div class="item-name">Target Plate</div>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="item-status complete">✓</div>
+                        <div class="item-number">4</div>
+                        <div class="item-name">Sample Plate</div>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="item-status complete">✓</div>
+                        <div class="item-number">5</div>
+                        <div class="item-name">Consumables Cartridge</div>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="item-status complete">✓</div>
+                        <div class="item-number">6</div>
+                        <div class="item-name">Two Tip Boxes</div>
+                    </li>
+                </ul>
+
+                <div class="all-items-checkbox">
+                    <div class="checkbox">✓</div>
+                    <div class="checkbox-label">ALL ITEMS LOADED</div>
+                </div>
+
+                <button class="action-button" onclick="performAction()">
+                    Close Bay Door
+                </button>
+            </div>
+
+            <div class="diagram-container">
+                <div class="bay-diagram">
+                    <div class="diagram-element id-plate"></div>
+                    <div class="diagram-element detection-plate"></div>
+                    <div class="diagram-element target-plate"></div>
+                    <div class="diagram-element sample-plate"></div>
+                    <div class="diagram-element consumables"></div>
+                    <div class="diagram-element tip-boxes"></div>
+                </div>
+
+                <div class="diagram-labels">
+                    <div class="diagram-label">
+                        <div class="label-number">1</div>
+                        ID Plate
+                    </div>
+                    <div class="diagram-label">
+                        <div class="label-number">2</div>
+                        Detection Plate
+                    </div>
+                    <div class="diagram-label">
+                        <div class="label-number">3</div>
+                        Target Plate
+                    </div>
+                    <div class="diagram-label">
+                        <div class="label-number">4</div>
+                        Sample Plate
+                    </div>
+                    <div class="diagram-label">
+                        <div class="label-number">5</div>
+                        Consumables
+                    </div>
+                    <div class="diagram-label">
+                        <div class="label-number">6</div>
+                        Tip Boxes
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function performAction() {
+            // Update bay status to ready
+            localStorage.setItem('bay2Status', 'ready');
+            // Navigate back to main screen with bay ready to run
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+
+        }
+
+        function showModeSwitch() {
+            if (confirm("Are you sure you want to switch to RUO mode?")) {
+                window.location.href = "login-ruo.html";
+            }
+        }
+    </script>
+</body>
+</html>

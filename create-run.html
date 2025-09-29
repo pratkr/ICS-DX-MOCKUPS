@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGO HT - Create Run</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .regulatory-text {
+            color: #888;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .datetime {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            background: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .mode-indicator {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007acc;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            height: 44px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .nav-tab:last-child {
+            border-right: none;
+        }
+
+        .nav-tab.active {
+            color: #333;
+            background: white;
+            border-bottom-color: #007acc;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            color: #666;
+            filter: grayscale(100%);
+        }
+
+        .nav-tab.active .nav-icon {
+            color: #333;
+            filter: grayscale(100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            height: calc(100vh - 104px);
+        }
+
+        /* Left Panel */
+        .left-panel {
+            width: 320px;
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .config-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #007acc;
+        }
+
+        .readonly-display {
+            background: #f5f5f5;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .edit-sample-btn {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .edit-sample-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .form-input.error {
+            border-color: #d32f2f;
+            background: #fff5f5;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        /* Right Panel - Plate Layout */
+        .right-panel {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .plate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .plate-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .change-names-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .change-names-btn:hover {
+            background: #005a99;
+        }
+
+        /* Plate Grid */
+        .plate-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .plate-grid {
+            display: grid;
+            grid-template-columns: 40px repeat(12, 1fr);
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .row-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .col-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+            padding: 8px 0;
+        }
+
+        .well {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            background: white;
+        }
+
+        .well.sample {
+            background: #4a90e2;
+            color: white;
+            border-color: #2e5f99;
+        }
+
+        .well.control {
+            background: #f39c12;
+            color: white;
+            border-color: #d68910;
+        }
+
+        .well.calibrator {
+            background: #9b59b6;
+            color: white;
+            border-color: #7d3c98;
+        }
+
+        .well.empty {
+            background: #f5f5f5;
+            color: #999;
+            border-color: #ddd;
+        }
+
+        .well:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Bottom Action Buttons */
+        .action-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cancel-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ccc;
+        }
+
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .finish-btn {
+            background: #007acc;
+            color: white;
+        }
+
+        .finish-btn:hover {
+            background: #005a99;
+        }
+
+        .finish-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Well Labels */
+        .well-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .well-label {
+            font-size: 8px;
+            color: #666;
+            text-align: center;
+            width: 48px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid;
+        }
+
+        .legend-dot.sample {
+            background: #4a90e2;
+            border-color: #2e5f99;
+        }
+
+        .legend-dot.control {
+            background: #f39c12;
+            border-color: #d68910;
+        }
+
+        .legend-dot.calibrator {
+            background: #9b59b6;
+            border-color: #7d3c98;
+        }
+
+        .legend-dot.empty {
+            background: #f5f5f5;
+            border-color: #ddd;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 500px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .sample-sheet-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sample-sheet-item {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sample-sheet-item:hover {
+            background: #f0f0f0;
+            border-color: #007acc;
+        }
+
+        .sample-sheet-info {
+            flex: 1;
+        }
+
+        .sample-sheet-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .sample-sheet-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Sample Metadata Popup */
+        .sample-popup {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            background: white;
+            border: 2px solid #007acc;
+            border-radius: 6px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            min-width: 250px;
+        }
+
+        .sample-popup h4 {
+            margin: 0 0 12px 0;
+            color: #007acc;
+            font-size: 14px;
+        }
+
+        .sample-field {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sample-field label {
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .sample-field span {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://alamarbio.com/wp-content/uploads/2020/10/AlamarDropLogo_4c.png" alt="Alamar Bio" class="logo" onclick="goHome()" style="cursor: pointer;">
+            <div class="regulatory-text">For In Vitro Diagnostic Use</div>
+        </div>
+        <div class="header-right">
+            <div class="datetime">12/23/2025 3:45 PM</div>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <span>xiaojun8</span>
+            </div>
+        </div>
+        <div class="mode-indicator">
+            IVD Mode
+            <div style="font-size: 10px; font-weight: normal; margin-top: 2px;">tap to switch mode</div>
+        </div>
+        <div class="version-info">IVD v1.2.0.0</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab active">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-tab">
+            <span class="nav-icon">📊</span>
+            Results
+        </div>
+        <div class="nav-tab">
+            <span class="nav-icon">🧪</span>
+            Assays
+        </div>
+        <div class="nav-tab">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </div>
+        <div class="nav-tab">
+            <span class="nav-icon">🔧</span>
+            Support
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="config-section">
+                <div class="section-title">Product Type</div>
+                <div class="form-group">
+                    <div class="readonly-display">NULISAqPCR</div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="section-title">Run Name</div>
+                <div class="form-group">
+                    <input type="text" class="form-input error" id="runName" value="20251113-0831_Bay1_IL4" />
+                    <div class="error-message">⚠️ Run name already in use. Please choose a unique run name.</div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="section-title">Assay</div>
+                <div class="form-group">
+                    <select class="form-select" id="assaySelect">
+                        <option value="bdptau217">BD-pTau-217 IVD</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="section-title">Sample Count</div>
+                <div class="form-group">
+                    <select class="form-select" id="sampleCount">
+                        <option value="24">24</option>
+                        <option value="48">48</option>
+                        <option value="96">96</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="section-title strikethrough">Number of Replicates</div>
+                <div class="form-group">
+                    <select class="form-select strikethrough" id="replicates" disabled>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="section-title">Total Sample Volume (μL)</div>
+                <div class="form-group">
+                    <div class="readonly-display">25</div>
+                </div>
+            </div>
+
+            <button class="edit-sample-btn" onclick="importSampleSheet()">Import Sample Sheet</button>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="plate-header">
+                <div class="plate-title">Sample Plate Layout</div>
+                <button class="change-names-btn" onclick="changeSampleNames()">
+                    📝 Change Sample Names
+                </button>
+            </div>
+
+            <div class="plate-container">
+                <!-- Column Headers -->
+                <div class="plate-grid" id="plateGrid">
+                    <div></div>
+                    <div class="col-label">1</div>
+                    <div class="col-label">2</div>
+                    <div class="col-label">3</div>
+                    <div class="col-label">4</div>
+                    <div class="col-label">5</div>
+                    <div class="col-label">6</div>
+                    <div class="col-label">7</div>
+                    <div class="col-label">8</div>
+                    <div class="col-label">9</div>
+                    <div class="col-label">10</div>
+                    <div class="col-label">11</div>
+                    <div class="col-label">12</div>
+
+                    <!-- Row A -->
+                    <div class="row-label">A</div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A1" data-sample="Sample1"></div>
+                        <div class="well-label">Sample1</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A2" data-sample="Sample2"></div>
+                        <div class="well-label">Sample2</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A3" data-sample="Sample3"></div>
+                        <div class="well-label">Sample3</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A4" data-sample="Sample4"></div>
+                        <div class="well-label">Sample4</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A5" data-sample="Sample5"></div>
+                        <div class="well-label">Sample5</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A6" data-sample="Sample6"></div>
+                        <div class="well-label">Sample6</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A7" data-sample="Sample7"></div>
+                        <div class="well-label">Sample7</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A8" data-sample="Sample8"></div>
+                        <div class="well-label">Sample8</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A9" data-sample="Sample9"></div>
+                        <div class="well-label">Sample9</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A10" data-sample="Sample10"></div>
+                        <div class="well-label">Sample10</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A11" data-sample="Sample11"></div>
+                        <div class="well-label">Sample11</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="A12" data-sample="Sample12"></div>
+                        <div class="well-label">Sample12</div>
+                    </div>
+
+                    <!-- Row B -->
+                    <div class="row-label">B</div>
+                    <div class="well-container">
+                        <div class="well control" data-well="B1" data-sample="Control Pos"></div>
+                        <div class="well-label">Control Pos</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well control" data-well="B2" data-sample="Control Neg"></div>
+                        <div class="well-label">Control Neg</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B3" data-sample="Sample13"></div>
+                        <div class="well-label">Sample13</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B4" data-sample="Sample14"></div>
+                        <div class="well-label">Sample14</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B5" data-sample="Sample15"></div>
+                        <div class="well-label">Sample15</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B6" data-sample="Sample16"></div>
+                        <div class="well-label">Sample16</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B7" data-sample="Sample17"></div>
+                        <div class="well-label">Sample17</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B8" data-sample="Sample18"></div>
+                        <div class="well-label">Sample18</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B9" data-sample="Sample19"></div>
+                        <div class="well-label">Sample19</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B10" data-sample="Sample20"></div>
+                        <div class="well-label">Sample20</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B11" data-sample="Sample21"></div>
+                        <div class="well-label">Sample21</div>
+                    </div>
+                    <div class="well-container">
+                        <div class="well sample" data-well="B12" data-sample="Sample22"></div>
+                        <div class="well-label">Sample22</div>
+                    </div>
+
+                    <!-- Row C -->
+                    <div class="row-label">C</div>
+                    <div class="well-container"><div class="well empty" data-well="C1"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C2"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C3"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C4"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C5"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C6"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C7"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C8"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C9"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C10"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C11"></div><div class="well-label"></div></div>
+                    <div class="well-container"><div class="well empty" data-well="C12"></div><div class="well-label"></div></div>
+
+                    <!-- Rows D-H (empty) -->
+                    <div class="row-label">D</div>
+                    <div class="well empty" data-well="D1"></div>
+                    <div class="well empty" data-well="D2"></div>
+                    <div class="well empty" data-well="D3"></div>
+                    <div class="well empty" data-well="D4"></div>
+                    <div class="well empty" data-well="D5"></div>
+                    <div class="well empty" data-well="D6"></div>
+                    <div class="well empty" data-well="D7"></div>
+                    <div class="well empty" data-well="D8"></div>
+                    <div class="well empty" data-well="D9"></div>
+                    <div class="well empty" data-well="D10"></div>
+                    <div class="well empty" data-well="D11"></div>
+                    <div class="well empty" data-well="D12"></div>
+
+                    <div class="row-label">E</div>
+                    <div class="well empty" data-well="E1"></div>
+                    <div class="well empty" data-well="E2"></div>
+                    <div class="well empty" data-well="E3"></div>
+                    <div class="well empty" data-well="E4"></div>
+                    <div class="well empty" data-well="E5"></div>
+                    <div class="well empty" data-well="E6"></div>
+                    <div class="well empty" data-well="E7"></div>
+                    <div class="well empty" data-well="E8"></div>
+                    <div class="well empty" data-well="E9"></div>
+                    <div class="well empty" data-well="E10"></div>
+                    <div class="well empty" data-well="E11"></div>
+                    <div class="well empty" data-well="E12"></div>
+
+                    <div class="row-label">F</div>
+                    <div class="well empty" data-well="F1"></div>
+                    <div class="well empty" data-well="F2"></div>
+                    <div class="well empty" data-well="F3"></div>
+                    <div class="well empty" data-well="F4"></div>
+                    <div class="well empty" data-well="F5"></div>
+                    <div class="well empty" data-well="F6"></div>
+                    <div class="well empty" data-well="F7"></div>
+                    <div class="well empty" data-well="F8"></div>
+                    <div class="well empty" data-well="F9"></div>
+                    <div class="well empty" data-well="F10"></div>
+                    <div class="well empty" data-well="F11"></div>
+                    <div class="well empty" data-well="F12"></div>
+
+                    <div class="row-label">G</div>
+                    <div class="well empty" data-well="G1"></div>
+                    <div class="well empty" data-well="G2"></div>
+                    <div class="well empty" data-well="G3"></div>
+                    <div class="well empty" data-well="G4"></div>
+                    <div class="well empty" data-well="G5"></div>
+                    <div class="well empty" data-well="G6"></div>
+                    <div class="well empty" data-well="G7"></div>
+                    <div class="well empty" data-well="G8"></div>
+                    <div class="well empty" data-well="G9"></div>
+                    <div class="well empty" data-well="G10"></div>
+                    <div class="well empty" data-well="G11"></div>
+                    <div class="well empty" data-well="G12"></div>
+
+                    <div class="row-label">H</div>
+                    <div class="well empty" data-well="H1"></div>
+                    <div class="well empty" data-well="H2"></div>
+                    <div class="well empty" data-well="H3"></div>
+                    <div class="well empty" data-well="H4"></div>
+                    <div class="well empty" data-well="H5"></div>
+                    <div class="well empty" data-well="H6"></div>
+                    <div class="well empty" data-well="H7"></div>
+                    <div class="well empty" data-well="H8"></div>
+                    <div class="well empty" data-well="H9"></div>
+                    <div class="well empty" data-well="H10"></div>
+                    <div class="well empty" data-well="H11"></div>
+                    <div class="well empty" data-well="H12"></div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot sample"></div>
+                        <span>Sample</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot control"></div>
+                        <span>Control</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot calibrator"></div>
+                        <span>Calibrator</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot empty"></div>
+                        <span>Empty</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Action Buttons -->
+    <div class="action-buttons">
+        <button class="action-btn cancel-btn" onclick="goBack()">Cancel</button>
+        <button class="action-btn finish-btn" id="finishBtn" onclick="finishRun()">Finish</button>
+    </div>
+
+    <!-- Sample Sheet Import Modal -->
+    <div id="sampleSheetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Import Sample Sheet</h3>
+                <button class="close-btn" onclick="closeSampleSheetModal()">&times;</button>
+            </div>
+            <ul class="sample-sheet-list">
+                <li class="sample-sheet-item" onclick="selectSampleSheet('BD-pTau217_Samples_20251223.xlsx')">
+                    <div class="sample-sheet-info">
+                        <div class="sample-sheet-name">BD-pTau217_Samples_20251223.xlsx</div>
+                        <div class="sample-sheet-details">24 samples • Created: Dec 23, 2025 • BD-pTau-217 Assay</div>
+                    </div>
+                </li>
+                <li class="sample-sheet-item" onclick="selectSampleSheet('BD-pTau217_Samples_20251220.xlsx')">
+                    <div class="sample-sheet-info">
+                        <div class="sample-sheet-name">BD-pTau217_Samples_20251220.xlsx</div>
+                        <div class="sample-sheet-details">22 samples • Created: Dec 20, 2025 • BD-pTau-217 Assay</div>
+                    </div>
+                </li>
+                <li class="sample-sheet-item" onclick="selectSampleSheet('BD-pTau217_Clinical_20251218.xlsx')">
+                    <div class="sample-sheet-info">
+                        <div class="sample-sheet-name">BD-pTau217_Clinical_20251218.xlsx</div>
+                        <div class="sample-sheet-details">18 samples • Created: Dec 18, 2025 • BD-pTau-217 Assay</div>
+                    </div>
+                </li>
+                <li class="sample-sheet-item" onclick="selectSampleSheet('BD-pTau217_QC_20251215.xlsx')">
+                    <div class="sample-sheet-info">
+                        <div class="sample-sheet-name">BD-pTau217_QC_20251215.xlsx</div>
+                        <div class="sample-sheet-details">12 samples • Created: Dec 15, 2025 • BD-pTau-217 Assay</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sample Metadata Popup -->
+    <div id="samplePopup" class="sample-popup">
+        <h4>Sample Metadata</h4>
+        <div class="sample-field">
+            <label>Sample Name:</label>
+            <span id="popupSampleName">-</span>
+        </div>
+        <div class="sample-field">
+            <label>Sample Type:</label>
+            <span>Serum</span>
+        </div>
+        <div class="sample-field">
+            <label>Run Name:</label>
+            <span>-</span>
+        </div>
+        <div class="sample-field">
+            <label>Plate ID:</label>
+            <span>-</span>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'main-layout-home-with-run.html';
+        }
+
+        function importSampleSheet() {
+            document.getElementById('sampleSheetModal').style.display = 'block';
+        }
+
+        function closeSampleSheetModal() {
+            document.getElementById('sampleSheetModal').style.display = 'none';
+        }
+
+        function selectSampleSheet(filename) {
+            closeSampleSheetModal();
+        }
+
+        function changeSampleNames() {
+            // Sample name editor would open here - no action for demo
+        }
+
+        function finishRun() {
+            // Update the main screen to show the created run
+            localStorage.setItem('bay1Status', 'load');
+            localStorage.setItem('bay1RunName', document.getElementById('runName').value);
+            localStorage.setItem('bay1Assay', 'NULISAqPCR BD-pTau-217 IVD');
+            window.location.href = 'main-layout-home-with-run.html';
+        }
+
+        function showSamplePopup(event, sampleName) {
+            const popup = document.getElementById('samplePopup');
+            const popupSampleName = document.getElementById('popupSampleName');
+
+            popupSampleName.textContent = sampleName || '-';
+
+            // Position popup near the clicked well
+            popup.style.left = (event.pageX + 10) + 'px';
+            popup.style.top = (event.pageY - 50) + 'px';
+            popup.style.display = 'block';
+
+            // Hide popup when clicking elsewhere
+            setTimeout(() => {
+                document.addEventListener('click', function hidePopup(e) {
+                    if (!popup.contains(e.target)) {
+                        popup.style.display = 'none';
+                        document.removeEventListener('click', hidePopup);
+                    }
+                });
+            }, 100);
+        }
+
+        // Auto-update run name when assay changes
+        document.getElementById('assaySelect').addEventListener('change', function() {
+            const assayMap = {
+                'bdptau217': 'BDpTau217'
+            };
+            const selectedAssay = assayMap[this.value] || 'Unknown';
+            const timestamp = '20251113-0831';
+            document.getElementById('runName').value = `${timestamp}_Bay1_${selectedAssay}`;
+        });
+
+        // Remove error when user changes run name
+        document.getElementById('runName').addEventListener('input', function() {
+            this.classList.remove('error');
+            const errorMessage = this.parentNode.querySelector('.error-message');
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+        });
+
+        // Well click handling
+        document.querySelectorAll('.well').forEach(well => {
+            well.addEventListener('click', function(event) {
+                if (!this.classList.contains('empty')) {
+                    const sampleName = this.getAttribute('data-sample');
+                    showSamplePopup(event, sampleName);
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('sampleSheetModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function goHome() {
+            window.location.href = 'main-layout-home-with-run.html';
+        }
+    </script>
+</body>
+</html>
