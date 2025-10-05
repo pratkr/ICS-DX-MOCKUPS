@@ -561,6 +561,18 @@
                     </a>
                 </li>
                 <li class="settings-nav-item">
+                    <a href="#" class="settings-nav-link" onclick="showSection('audit')">
+                        <span class="settings-icon">📋</span>
+                        Audit Log
+                    </a>
+                </li>
+                <li class="settings-nav-item">
+                    <a href="#" class="settings-nav-link" onclick="showSection('alerts')">
+                        <span class="settings-icon">⚠️</span>
+                        System Alerts
+                    </a>
+                </li>
+                <li class="settings-nav-item">
                     <a href="#" class="settings-nav-link" onclick="showSection('network')">
                         <span class="settings-icon">🌐</span>
                         Network & Backup
@@ -783,6 +795,578 @@
 
                 <div style="text-align: right; padding: 20px 0;">
                     <button class="btn btn-primary">Save User Settings</button>
+                </div>
+            </div>
+
+            <!-- Audit Log -->
+            <div id="audit" class="content-section">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">System Audit Log</div>
+                        <div class="section-subtitle">View all system events and user actions for compliance and security monitoring</div>
+                    </div>
+                    <div class="section-content">
+                        <!-- Filters Section -->
+                        <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-bottom: 20px;">
+                            <div style="font-weight: bold; margin-bottom: 12px; color: #333;">Filters</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">From Date</label>
+                                    <input type="date" class="form-input" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">To Date</label>
+                                    <input type="date" class="form-input" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">User</label>
+                                    <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                        <option value="">All Users</option>
+                                        <option value="xiaojun8">xiaojun8</option>
+                                        <option value="lab_tech1">lab_tech1</option>
+                                        <option value="tech_admin">tech_admin</option>
+                                        <option value="SYSTEM">SYSTEM</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Event Type</label>
+                                    <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                        <option value="">All Events</option>
+                                        <option value="user">User Management</option>
+                                        <option value="run">Run Lifecycle</option>
+                                        <option value="config">Configuration</option>
+                                        <option value="backup">Backup/Database</option>
+                                        <option value="system">System Events</option>
+                                        <option value="network">Network Changes</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Run Name</label>
+                                    <input type="text" class="form-input" placeholder="Search by run name..." style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div style="display: flex; align-items: flex-end; gap: 8px;">
+                                    <button class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">Apply Filters</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Export Button -->
+                        <div style="text-align: right; margin-bottom: 12px;">
+                            <button class="btn btn-primary" onclick="exportAuditLog()">
+                                📥 Export to CSV
+                            </button>
+                        </div>
+
+                        <!-- Audit Log Table -->
+                        <div style="overflow-x: auto; border: 1px solid #ddd; border-radius: 6px;">
+                            <table class="settings-table" style="margin: 0;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 150px; cursor: pointer;" onclick="sortTable('datetime')">Date/Time ↕</th>
+                                        <th style="width: 100px; cursor: pointer;" onclick="sortTable('user')">User ↕</th>
+                                        <th style="width: 80px; cursor: pointer;" onclick="sortTable('code')">Code ↕</th>
+                                        <th style="min-width: 300px;">Event Description</th>
+                                        <th style="width: 150px;">Run Name</th>
+                                        <th style="width: 150px;">Assay</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditLogTableBody">
+                                    <tr>
+                                        <td>2025-12-23 15:45:12</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #e3f2fd; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-20</span></td>
+                                        <td>User logged in</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 14:30:45</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-7</span></td>
+                                        <td>Run started</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 16:45:22</td>
+                                        <td>SYSTEM</td>
+                                        <td><span style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-9</span></td>
+                                        <td>Run completed successfully</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 16:46:05</td>
+                                        <td>SYSTEM</td>
+                                        <td><span style="background: #fff3e0; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-12</span></td>
+                                        <td>Database backup initiated</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 13:20:15</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #f3e5f5; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-3</span></td>
+                                        <td>User account created: lab_tech1</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 13:22:30</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #f3e5f5; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-75</span></td>
+                                        <td>User password reset for: lab_tech1</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 11:15:00</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #fce4ec; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-4</span></td>
+                                        <td>System configuration changed: Network drive added (Z:\)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 09:15:45</td>
+                                        <td>lab_tech1</td>
+                                        <td><span style="background: #e3f2fd; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-20</span></td>
+                                        <td>User logged in</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 08:30:00</td>
+                                        <td>lab_tech1</td>
+                                        <td><span style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-7</span></td>
+                                        <td>Run started</td>
+                                        <td>RUN-20251223-002</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-23 10:45:30</td>
+                                        <td>SYSTEM</td>
+                                        <td><span style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-9</span></td>
+                                        <td>Run completed successfully</td>
+                                        <td>RUN-20251223-002</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-22 18:00:00</td>
+                                        <td>SYSTEM</td>
+                                        <td><span style="background: #ffebee; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-18</span></td>
+                                        <td>System shutdown initiated</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-22 17:55:00</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #e3f2fd; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-20</span></td>
+                                        <td>User logged out</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-22 14:20:10</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #fff9c4; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-22</span></td>
+                                        <td>Software upgrade initiated: v1.2.0.0 → v1.2.1.0</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-22 12:00:00</td>
+                                        <td>SYSTEM</td>
+                                        <td><span style="background: #fff3e0; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-12</span></td>
+                                        <td>Scheduled database backup completed</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-22 10:30:25</td>
+                                        <td>lab_tech1</td>
+                                        <td><span style="background: #ffebee; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-11</span></td>
+                                        <td>Run aborted by user</td>
+                                        <td>RUN-20251222-005</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-22 09:45:12</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #fce4ec; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-37</span></td>
+                                        <td>System date/time changed</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-21 16:20:00</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #e1f5fe; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-41</span></td>
+                                        <td>Mode switched: RUO → IVD</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-21 15:10:30</td>
+                                        <td>SYSTEM</td>
+                                        <td><span style="background: #fff3e0; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-13</span></td>
+                                        <td>Database restore completed successfully</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-21 14:00:00</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #fff3e0; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-13</span></td>
+                                        <td>Database restore initiated from: backup_20251220.db</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-12-21 11:25:40</td>
+                                        <td>xiaojun8</td>
+                                        <td><span style="background: #f3e5f5; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-76</span></td>
+                                        <td>User field modified for tech_admin: Role changed from Operator to Technician</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px;">
+                            <div style="color: #666; font-size: 13px;">
+                                Showing 1-20 of 247 events
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;" disabled>Previous</button>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-primary" style="font-size: 13px; padding: 6px 12px;">1</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">2</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">3</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">4</button>
+                                    <span style="padding: 6px 12px; color: #666;">...</span>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">13</button>
+                                </div>
+                                <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">Next</button>
+                            </div>
+                        </div>
+
+                        <!-- Info Panel -->
+                        <div style="margin-top: 20px; padding: 16px; background: #e3f2fd; border-left: 4px solid #007acc; border-radius: 4px;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #0056b3;">📌 Audit Log Information</div>
+                            <ul style="margin: 0; padding-left: 20px; color: #333; font-size: 13px; line-height: 1.6;">
+                                <li>All events are stored persistently and cannot be modified or deleted</li>
+                                <li>SYSTEM user indicates automated events triggered by the instrument</li>
+                                <li>Password changes are logged without storing actual password values (AS-75)</li>
+                                <li>Export functionality generates timestamped CSV files for regulatory compliance</li>
+                                <li>Event codes (AS-X) reference specific audit specification requirements</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Alerts -->
+            <div id="alerts" class="content-section">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">System Alert Events</div>
+                        <div class="section-subtitle">View and manage system alerts for monitoring critical events and warnings</div>
+                    </div>
+                    <div class="section-content">
+                        <!-- Filters Section -->
+                        <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-bottom: 20px;">
+                            <div style="font-weight: bold; margin-bottom: 12px; color: #333;">Filters</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">From Date</label>
+                                    <input type="date" class="form-input" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">To Date</label>
+                                    <input type="date" class="form-input" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Severity</label>
+                                    <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;" id="severityFilter">
+                                        <option value="">All Severities</option>
+                                        <option value="critical">Critical</option>
+                                        <option value="error">Error</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="info">Informational</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Status</label>
+                                    <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                        <option value="">All Alerts</option>
+                                        <option value="unacknowledged">Unacknowledged</option>
+                                        <option value="acknowledged">Acknowledged</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Search Alert Description</label>
+                                    <input type="text" class="form-input" placeholder="Search alerts..." style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div style="display: flex; align-items: flex-end; gap: 8px;">
+                                    <button class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">Apply Filters</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <div>
+                                <button class="btn btn-secondary" onclick="acknowledgeAllAlerts()">
+                                    ✓ Acknowledge All Warnings
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary" onclick="exportAlerts()">
+                                    📥 Export to CSV
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Alert Events Table -->
+                        <div style="overflow-x: auto; border: 1px solid #ddd; border-radius: 6px;">
+                            <table class="settings-table" style="margin: 0;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px; cursor: pointer;" onclick="sortAlertTable('severity')">Severity ↕</th>
+                                        <th style="width: 150px; cursor: pointer;" onclick="sortAlertTable('datetime')">Date/Time ↕</th>
+                                        <th style="width: 80px; cursor: pointer;" onclick="sortAlertTable('code')">Code ↕</th>
+                                        <th style="min-width: 300px;">Alert Description</th>
+                                        <th style="width: 150px;">Run Name</th>
+                                        <th style="width: 150px;">Assay</th>
+                                        <th style="width: 100px;">Status</th>
+                                        <th style="width: 80px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="alertsTableBody">
+                                    <tr>
+                                        <td><span style="background: #c62828; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">CRITICAL</span></td>
+                                        <td>2025-12-23 14:15:30</td>
+                                        <td><span style="background: #ffcdd2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-001</span></td>
+                                        <td>Database connection failure - all sample processing halted</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #c62828; font-weight: bold;">Unacknowledged</span></td>
+                                        <td><button class="btn btn-primary" style="font-size: 11px; padding: 4px 8px;" onclick="acknowledgeAlert(this)">ACK</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #c62828; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">CRITICAL</span></td>
+                                        <td>2025-12-22 10:20:15</td>
+                                        <td><span style="background: #ffcdd2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Bay 2 thermal control module unresponsive</td>
+                                        <td>RUN-20251222-003</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #c62828; font-weight: bold;">Unacknowledged</span></td>
+                                        <td><button class="btn btn-primary" style="font-size: 11px; padding: 4px 8px;" onclick="acknowledgeAlert(this)">ACK</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-23 08:45:20</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Barcode scanner communication lost</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-23 07:30:10</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-016</span></td>
+                                        <td>Unexpected software failure: Analysis module crashed during data processing</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-22 16:20:45</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Bay 1 dispense module malfunction</td>
+                                        <td>RUN-20251222-005</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-21 13:15:30</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-016</span></td>
+                                        <td>Unexpected software failure: Run controller service terminated unexpectedly</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-21 09:40:25</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Temperature sensor out of range in Bay 3</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #f57c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">WARNING</span></td>
+                                        <td>2025-12-23 12:00:05</td>
+                                        <td><span style="background: #ffecb3; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-010</span></td>
+                                        <td>Database backup failed - scheduled backup did not complete</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #f57c00; font-weight: bold;">Unviewed</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="viewAlert(this)">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #f57c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">WARNING</span></td>
+                                        <td>2025-12-23 11:30:00</td>
+                                        <td><span style="background: #ffecb3; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-003</span></td>
+                                        <td>Low bulk consumables: Wash buffer level below 20%</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #f57c00; font-weight: bold;">Unviewed</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="viewAlert(this)">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #f57c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">WARNING</span></td>
+                                        <td>2025-12-22 18:10:15</td>
+                                        <td><span style="background: #ffecb3; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-010</span></td>
+                                        <td>Missed database backup - system was shutdown during scheduled backup window</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Viewed</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 15:45:12</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-52</span></td>
+                                        <td>Run started: RUN-20251223-001</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 17:30:20</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-53</span></td>
+                                        <td>Run completed successfully: RUN-20251223-001</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 14:25:30</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-008</span></td>
+                                        <td>Failed authentication attempt for user: lab_tech2</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 13:15:00</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-69</span></td>
+                                        <td>Firmware upgrade successful: Bay 1 Controller v2.1.0 → v2.2.0 (firmware_v2.2.0.bin)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 10:20:15</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-52</span></td>
+                                        <td>Run started: RUN-20251223-002</td>
+                                        <td>RUN-20251223-002</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 12:45:30</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-53</span></td>
+                                        <td>Run completed successfully: RUN-20251223-002</td>
+                                        <td>RUN-20251223-002</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-22 14:30:00</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-69</span></td>
+                                        <td>Firmware upgrade successful: Bay 2 Controller v2.0.5 → v2.2.0 (firmware_v2.2.0.bin)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-22 09:20:10</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-008</span></td>
+                                        <td>Failed authentication attempt for user: xiaojun8</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px;">
+                            <div style="color: #666; font-size: 13px;">
+                                Showing 1-18 of 47 alerts
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;" disabled>Previous</button>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-primary" style="font-size: 13px; padding: 6px 12px;">1</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">2</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">3</button>
+                                </div>
+                                <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">Next</button>
+                            </div>
+                        </div>
+
+                        <!-- Info Panel -->
+                        <div style="margin-top: 20px; padding: 16px; background: #fff3e0; border-left: 4px solid #f57c00; border-radius: 4px;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #e65100;">⚠️ Alert System Information</div>
+                            <ul style="margin: 0; padding-left: 20px; color: #333; font-size: 13px; line-height: 1.6;">
+                                <li><strong>Critical:</strong> System faults requiring service personnel intervention (database failure, unrecoverable hardware failure)</li>
+                                <li><strong>Error:</strong> Processing faults that may be resolved by restart/POST (recoverable hardware failures)</li>
+                                <li><strong>Warning:</strong> Conditions requiring user intervention or notification (backup failures, low consumables)</li>
+                                <li><strong>Informational:</strong> Non-urgent events logged for reference (run lifecycle, firmware upgrades, failed login attempts)</li>
+                                <li>Critical and Error alerts require user acknowledgment via dialog notification</li>
+                                <li>Warning alerts show visual indication until viewed by user</li>
+                                <li>All alert events are persisted to storage (AN-20)</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1140,6 +1724,73 @@
                 recurrenceSelect.disabled = false;
                 timeSelect.disabled = false;
                 daySelect.disabled = false;
+            }
+        }
+
+        // Audit Log Functions
+        function exportAuditLog() {
+            alert('Audit log export initiated.\n\nGenerating CSV file with timestamp: audit_log_' + new Date().toISOString().replace(/[:.]/g, '-') + '.csv\n\nFile will be saved to configured export location.');
+        }
+
+        function sortTable(column) {
+            alert('Sorting by: ' + column + '\n\n(In production, this would sort the table by the selected column)');
+        }
+
+        // Alert System Functions
+        function exportAlerts() {
+            alert('System alerts export initiated.\n\nGenerating CSV file with timestamp: system_alerts_' + new Date().toISOString().replace(/[:.]/g, '-') + '.csv\n\nFile will be saved to configured export location.');
+        }
+
+        function sortAlertTable(column) {
+            alert('Sorting alerts by: ' + column + '\n\n(In production, this would sort the alert table by the selected column)');
+        }
+
+        function acknowledgeAlert(button) {
+            if (confirm('Acknowledge this alert?\n\nThis will mark the alert as acknowledged and remove it from the unacknowledged list.')) {
+                const row = button.closest('tr');
+                const statusCell = row.cells[6];
+                const actionCell = row.cells[7];
+
+                statusCell.innerHTML = '<span style="color: #666;">Acknowledged</span>';
+                actionCell.innerHTML = '—';
+
+                // Update row background to show acknowledged state
+                row.style.background = 'white';
+
+                alert('Alert acknowledged successfully.');
+            }
+        }
+
+        function viewAlert(button) {
+            const row = button.closest('tr');
+            const statusCell = row.cells[6];
+            const actionCell = row.cells[7];
+
+            statusCell.innerHTML = '<span style="color: #666;">Viewed</span>';
+            actionCell.innerHTML = '—';
+
+            // Update row background
+            row.style.background = 'white';
+
+            alert('Alert marked as viewed.');
+        }
+
+        function acknowledgeAllAlerts() {
+            if (confirm('Acknowledge all Warning alerts?\n\nThis will mark all unviewed warnings as acknowledged.')) {
+                const rows = document.querySelectorAll('#alertsTableBody tr');
+                let count = 0;
+
+                rows.forEach(row => {
+                    const statusCell = row.cells[6];
+                    if (statusCell && statusCell.textContent.includes('Unviewed')) {
+                        statusCell.innerHTML = '<span style="color: #666;">Viewed</span>';
+                        row.cells[7].innerHTML = '—';
+                        row.style.background = 'white';
+                        count++;
+                    }
+                });
+
+                alert(count + ' warning alerts have been acknowledged.');
             }
         }
     </script>
