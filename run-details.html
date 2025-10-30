@@ -299,6 +299,21 @@
             font-weight: bold;
         }
 
+        .status-negative {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .status-positive {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .status-indeterminate {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
         /* Summary Panel */
         .summary-panel {
             background: white;
@@ -531,8 +546,9 @@
                             <th>Sample ID</th>
                             <th>Sample Plate Well</th>
                             <th>Assay Plate Well ID</th>
-                            <th>Concentration</th>
-                            <th>Units</th>
+                            <th>BDpTau-217<br>(pg/mL)</th>
+                            <th>Aβ42<br>(pg/mL)</th>
+                            <th>BDpTau-217/Aβ42<br>Ratio</th>
                             <th>QC Status</th>
                             <th>Results Flag</th>
                         </tr>
@@ -542,109 +558,121 @@
                             <td>Sample1</td>
                             <td>A1</td>
                             <td>AP001_A1</td>
-                            <td>45.2</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.31</td>
+                            <td>85.2</td>
+                            <td>0.0036</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-negative">NEGATIVE</td>
                         </tr>
                         <tr>
                             <td>Sample2</td>
                             <td>A2</td>
                             <td>AP001_A2</td>
-                            <td>127.8</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.85</td>
+                            <td>112.4</td>
+                            <td>0.0076</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-positive">POSITIVE</td>
                         </tr>
                         <tr>
                             <td>Sample3</td>
                             <td>A3</td>
                             <td>AP001_A3</td>
-                            <td>23.4</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.15</td>
+                            <td>98.7</td>
+                            <td>0.0015</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-negative">NEGATIVE</td>
                         </tr>
                         <tr>
                             <td>Sample4</td>
                             <td>A4</td>
                             <td>AP001_A4</td>
-                            <td>89.7</td>
-                            <td>pg/mL</td>
-                            <td class="status-flag">Review</td>
-                            <td>High</td>
+                            <td>0.62</td>
+                            <td>135.6</td>
+                            <td>0.0046</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-indeterminate">INDETERMINATE</td>
                         </tr>
                         <tr>
                             <td>Sample5</td>
                             <td>A5</td>
                             <td>AP001_A5</td>
-                            <td>156.3</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.22</td>
+                            <td>105.3</td>
+                            <td>0.0021</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-negative">NEGATIVE</td>
                         </tr>
                         <tr>
                             <td>Sample6</td>
                             <td>A6</td>
                             <td>AP001_A6</td>
-                            <td>67.9</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.78</td>
+                            <td>92.1</td>
+                            <td>0.0085</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-positive">POSITIVE</td>
                         </tr>
                         <tr>
                             <td>Sample7</td>
                             <td>A7</td>
                             <td>AP001_A7</td>
-                            <td>201.4</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.28</td>
+                            <td>88.4</td>
+                            <td>0.0032</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-negative">NEGATIVE</td>
                         </tr>
                         <tr>
                             <td>Sample8</td>
                             <td>A8</td>
                             <td>AP001_A8</td>
-                            <td>34.1</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.41</td>
+                            <td>95.8</td>
+                            <td>0.0043</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-indeterminate">INDETERMINATE</td>
                         </tr>
                         <tr>
                             <td>Sample9</td>
                             <td>A9</td>
                             <td>AP001_A9</td>
-                            <td>98.6</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.18</td>
+                            <td>102.5</td>
+                            <td>0.0018</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-negative">NEGATIVE</td>
                         </tr>
                         <tr>
                             <td>Sample10</td>
                             <td>A10</td>
                             <td>AP001_A10</td>
-                            <td>142.7</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.92</td>
+                            <td>118.7</td>
+                            <td>0.0077</td>
+                            <td class="status-pass">PASS</td>
+                            <td class="status-positive">POSITIVE</td>
                         </tr>
                         <tr>
                             <td>Control Pos</td>
                             <td>B1</td>
                             <td>AP001_B1</td>
-                            <td>185.2</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>1.85</td>
+                            <td>45.2</td>
+                            <td>0.0409</td>
+                            <td class="status-pass">PASS</td>
+                            <td>IN RANGE</td>
                         </tr>
                         <tr>
                             <td>Control Neg</td>
                             <td>B2</td>
                             <td>AP001_B2</td>
-                            <td>2.8</td>
-                            <td>pg/mL</td>
-                            <td class="status-pass">Pass</td>
-                            <td>-</td>
+                            <td>0.03</td>
+                            <td>95.6</td>
+                            <td>0.0003</td>
+                            <td class="status-pass">PASS</td>
+                            <td>IN RANGE</td>
                         </tr>
                     </tbody>
                 </table>
@@ -658,16 +686,20 @@
                         <div class="stat-value">12</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Passed</div>
-                        <div class="stat-value pass">11</div>
+                        <div class="stat-label">Negative</div>
+                        <div class="stat-value pass">5</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Failed</div>
-                        <div class="stat-value fail">0</div>
+                        <div class="stat-label">Positive</div>
+                        <div class="stat-value fail">3</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Flagged</div>
-                        <div class="stat-value flag">1</div>
+                        <div class="stat-label">Indeterminate</div>
+                        <div class="stat-value flag">2</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Controls</div>
+                        <div class="stat-value pass">2 (PASS)</div>
                     </div>
                 </div>
 
@@ -684,25 +716,25 @@
         const runData = {
             'AAA08/12/2025Run001': {
                 name: 'AAA08/12/2025Run001',
-                assay: 'BD-pTau-217 IVD',
-                assayVersion: 'v2.1.3',
+                assay: 'BDpTau-217/Aβ42 Ratio IVD',
+                assayVersion: 'BDpTau217-Ab42_IVD v1.0',
                 bay: 'Bay 1',
                 start: '08/12/2025 8:30 AM',
                 completion: '08/12/2025 11:15 AM',
                 operator: 'Admin1',
-                kitLot: 'NULISA-BDP217-LOT2025A (exp. 2026-03-15)',
+                kitLot: 'NULISA-BDP217-LOT2025A (exp. 2026-03-15), NULISA-AB42-LOT2025B (exp. 2026-04-22)',
                 softwareVersion: 'IVD v1.2.0.0',
                 status: 'Complete'
             },
             '20251223-1545_Bay1_BDpTau217': {
                 name: '20251223-1545_Bay1_BDpTau217',
-                assay: 'BD-pTau-217 IVD',
-                assayVersion: 'v2.1.3',
+                assay: 'BDpTau-217/Aβ42 Ratio IVD',
+                assayVersion: 'BDpTau217-Ab42_IVD v1.0',
                 bay: 'Bay 1',
                 start: '12/23/2025 3:45 PM',
                 completion: '12/23/2025 4:45 PM',
                 operator: 'xiaojun8',
-                kitLot: 'NULISA-BDP217-LOT2025A (exp. 2026-03-15)',
+                kitLot: 'NULISA-BDP217-LOT2025A (exp. 2026-03-15), NULISA-AB42-LOT2025B (exp. 2026-04-22)',
                 softwareVersion: 'IVD v1.2.0.0',
                 status: 'Complete'
             },

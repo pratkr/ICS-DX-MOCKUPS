@@ -362,6 +362,21 @@
             font-weight: bold;
         }
 
+        .status-negative {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .status-positive {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .status-indeterminate {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
         .qc-pass {
             color: #2e7d32;
             font-weight: bold;
@@ -644,30 +659,19 @@
     <div class="report-container">
         <!-- Laboratory Header -->
         <div class="lab-header">
-            <div class="report-title" id="reportTitle">Clinical Test Report: NULISAqPCR™ BDpTau-217 Assay v1.0</div>
-            <div style="text-align: right; margin-top: 8px; font-size: 14px;">
-                <span>Report Status: </span>
-                <span id="reportStatus" class="status-draft">DRAFT</span>
+            <div class="report-title" id="reportTitle">Clinical Test Report: NULISAqPCR™ BDpTau-217/Aβ42 Ratio Assay v1.0</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 14px;">
+                <div>
+                    <strong>Specimen Type:</strong> Plasma (K₂EDTA)
+                </div>
+                <div>
+                    <strong>Report Date:</strong> <span id="resultDate">2025-12-23 16:45 PST</span>
+                </div>
+                <div>
+                    <span>Report Status: </span>
+                    <span id="reportStatus" class="status-draft">DRAFT</span>
+                </div>
             </div>
-        </div>
-
-        <!-- Sample Details & Dates -->
-        <div class="report-section">
-            <div class="section-title">Sample Details & Dates</div>
-            <table class="info-table">
-                <tr>
-                    <td class="field-label">Unique Sample ID</td>
-                    <td id="sampleId">BDP-2025-1223-001</td>
-                </tr>
-                <tr>
-                    <td class="field-label">Specimen Type</td>
-                    <td>Plasma (K₂EDTA)</td>
-                </tr>
-                <tr>
-                    <td class="field-label">Result Date/Time</td>
-                    <td id="resultDate">2025-12-23 16:45 PST</td>
-                </tr>
-            </table>
         </div>
 
         <!-- Test Results -->
@@ -675,9 +679,18 @@
             <div class="section-title">Test Results</div>
 
             <div class="threshold-info">
-                <strong>Reference Interval / Decision Threshold:</strong><br>
-                Reference Interval: ≤ 0.10 pg/mL (verification study)<br>
-                Decision Threshold: 0.28 pg/mL (clinical cutoff for elevated levels)
+                <strong>Clinical Cutoff Values:</strong><br>
+                • <strong>Negative:</strong> ≤ 0.0037 (ratio) - Unlikely to have amyloid pathology associated with Alzheimer's Disease<br>
+                • <strong>Indeterminate:</strong> 0.0037 - 0.0055 (ratio) - Uncertain; additional clinical evaluation recommended<br>
+                • <strong>Positive:</strong> &gt; 0.0055 (ratio) - Consistent with amyloid pathology associated with Alzheimer's Disease
+            </div>
+
+            <div class="threshold-info" style="background: #e3f2fd; border-color: #90caf9;">
+                <strong>⚠️ Important Clinical Notes:</strong><br>
+                • This test is intended for adult patients aged 50 years and older presenting with signs and symptoms of cognitive decline in specialized care settings.<br>
+                • This test is NOT intended as a screening or stand-alone diagnostic test.<br>
+                • Results should be interpreted in conjunction with clinical evaluation and other diagnostic information.<br>
+                • Negative results do not rule out Alzheimer's Disease; other causes of cognitive decline should be investigated.
             </div>
 
             <table class="results-table">
@@ -686,8 +699,9 @@
                         <th>Sample ID</th>
                         <th>Sample Plate Well</th>
                         <th>Assay Plate Well ID</th>
-                        <th>Concentration</th>
-                        <th>Units</th>
+                        <th>BDpTau-217<br>(pg/mL)</th>
+                        <th>Aβ42<br>(pg/mL)</th>
+                        <th>BDpTau-217/Aβ42<br>Ratio</th>
                         <th>QC Status</th>
                         <th>Results Flag</th>
                     </tr>
@@ -696,56 +710,122 @@
                     <tr>
                         <td>Sample1</td>
                         <td>A1</td>
-                        <td>A1-001</td>
+                        <td>AP001_A1</td>
                         <td>0.31</td>
-                        <td>pg/mL</td>
+                        <td>85.2</td>
+                        <td>0.0036</td>
                         <td class="status-normal">PASS</td>
-                        <td class="status-abnormal">ELEVATED</td>
+                        <td class="status-negative">NEGATIVE</td>
                     </tr>
                     <tr>
                         <td>Sample2</td>
                         <td>A2</td>
-                        <td>A2-002</td>
+                        <td>AP001_A2</td>
                         <td>0.85</td>
-                        <td>pg/mL</td>
+                        <td>112.4</td>
+                        <td>0.0076</td>
                         <td class="status-normal">PASS</td>
-                        <td class="status-abnormal">ELEVATED</td>
+                        <td class="status-positive">POSITIVE</td>
                     </tr>
                     <tr>
                         <td>Sample3</td>
                         <td>A3</td>
-                        <td>A3-003</td>
+                        <td>AP001_A3</td>
                         <td>0.15</td>
-                        <td>pg/mL</td>
+                        <td>98.7</td>
+                        <td>0.0015</td>
                         <td class="status-normal">PASS</td>
-                        <td class="status-normal">NORMAL</td>
+                        <td class="status-negative">NEGATIVE</td>
                     </tr>
                     <tr>
                         <td>Sample4</td>
                         <td>A4</td>
-                        <td>A4-004</td>
+                        <td>AP001_A4</td>
                         <td>0.62</td>
-                        <td>pg/mL</td>
+                        <td>135.6</td>
+                        <td>0.0046</td>
                         <td class="status-normal">PASS</td>
-                        <td class="status-abnormal">ELEVATED</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample5</td>
+                        <td>A5</td>
+                        <td>AP001_A5</td>
+                        <td>0.22</td>
+                        <td>105.3</td>
+                        <td>0.0021</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample6</td>
+                        <td>A6</td>
+                        <td>AP001_A6</td>
+                        <td>0.78</td>
+                        <td>92.1</td>
+                        <td>0.0085</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample7</td>
+                        <td>A7</td>
+                        <td>AP001_A7</td>
+                        <td>0.28</td>
+                        <td>88.4</td>
+                        <td>0.0032</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample8</td>
+                        <td>A8</td>
+                        <td>AP001_A8</td>
+                        <td>0.41</td>
+                        <td>95.8</td>
+                        <td>0.0043</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample9</td>
+                        <td>A9</td>
+                        <td>AP001_A9</td>
+                        <td>0.18</td>
+                        <td>102.5</td>
+                        <td>0.0018</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample10</td>
+                        <td>A10</td>
+                        <td>AP001_A10</td>
+                        <td>0.92</td>
+                        <td>118.7</td>
+                        <td>0.0077</td>
+                        <td class="status-normal">PASS</td>
+                        <td class="status-positive">POSITIVE</td>
                     </tr>
                     <tr>
                         <td>Control Pos</td>
                         <td>B1</td>
-                        <td>B1-CP</td>
+                        <td>AP001_B1</td>
                         <td>1.85</td>
-                        <td>pg/mL</td>
+                        <td>45.2</td>
+                        <td>0.0409</td>
                         <td class="status-normal">PASS</td>
-                        <td class="status-normal">NORMAL</td>
+                        <td class="status-normal">IN RANGE</td>
                     </tr>
                     <tr>
                         <td>Control Neg</td>
                         <td>B2</td>
-                        <td>B2-CN</td>
+                        <td>AP001_B2</td>
                         <td>0.03</td>
-                        <td>pg/mL</td>
+                        <td>95.6</td>
+                        <td>0.0003</td>
                         <td class="status-normal">PASS</td>
-                        <td class="status-normal">NORMAL</td>
+                        <td class="status-normal">IN RANGE</td>
                     </tr>
                 </tbody>
             </table>
@@ -756,8 +836,14 @@
         <div class="report-section">
             <div class="section-title">Control QC Status</div>
             <div class="qc-pass">
-                Positive Control: 1.85 pg/mL (Expected: 1.75 ± 0.25 pg/mL) - PASS<br>
-                Negative Control: 0.03 pg/mL (Expected: ≤ 0.05 pg/mL) - PASS
+                <strong>Positive Control:</strong><br>
+                &nbsp;&nbsp;BDpTau-217: 1.85 pg/mL (Expected: 1.75 ± 0.25 pg/mL)<br>
+                &nbsp;&nbsp;Aβ42: 45.2 pg/mL (Expected: 46.0 ± 5.0 pg/mL)<br>
+                &nbsp;&nbsp;Ratio: 0.0409 (Expected: 0.038 - 0.042) - <strong>PASS</strong><br><br>
+                <strong>Negative Control:</strong><br>
+                &nbsp;&nbsp;BDpTau-217: 0.03 pg/mL (Expected: ≤ 0.05 pg/mL)<br>
+                &nbsp;&nbsp;Aβ42: 95.6 pg/mL (Expected: 90.0 - 100.0 pg/mL)<br>
+                &nbsp;&nbsp;Ratio: 0.0003 (Expected: ≤ 0.0006) - <strong>PASS</strong>
             </div>
         </div>
 
@@ -767,15 +853,19 @@
             <table class="info-table">
                 <tr>
                     <td class="field-label">Assay Name</td>
-                    <td>BDpTau217</td>
+                    <td>BDpTau217/Aβ42 Ratio</td>
+                </tr>
+                <tr>
+                    <td class="field-label">Markers Measured</td>
+                    <td>BDpTau-217, Aβ42 (1-42)</td>
                 </tr>
                 <tr>
                     <td class="field-label">Assay Version</td>
-                    <td>BDpTau217_IVD v1.0</td>
+                    <td>BDpTau217-Ab42_IVD v1.0</td>
                 </tr>
                 <tr>
                     <td class="field-label">Kit/Reagent Lot</td>
-                    <td>NULISA-BDP217-LOT2025A (exp. 2026-03-15)</td>
+                    <td>NULISA-BDP217-LOT2025A (exp. 2026-03-15), NULISA-AB42-LOT2025B (exp. 2026-04-22)</td>
                 </tr>
                 <tr>
                     <td class="field-label">Software Version</td>
@@ -842,7 +932,8 @@
         <div class="regulatory-footer">
             <div class="regulatory-footer-text">For In Vitro Diagnostic Use.</div>
             <div style="margin-top: 8px; font-size: 12px; color: #666;">
-                This test has been performed in accordance with FDA regulations for in vitro diagnostic devices.
+                This test has been performed in accordance with FDA regulations for in vitro diagnostic devices.<br><br>
+                <strong>Intended Use:</strong> The BDpTau-217/Aβ42 Ratio test is indicated for adult patients, aged 50 years and older, presenting at a specialized care setting with signs and symptoms of cognitive decline as an aid to identify patients with amyloid pathology associated with Alzheimer's Disease. This test is not intended as a screening or stand-alone diagnostic test.
             </div>
         </div>
     </div>
@@ -851,13 +942,11 @@
         // Sample report data mapping
         const reportData = {
             '20251223-1545_Bay1_BDpTau217': {
-                title: 'Clinical Test Report: NULISAqPCR™ BDpTau-217 Assay v1.0',
-                sampleId: 'BDP-2025-1223-001',
+                title: 'Clinical Test Report: NULISAqPCR™ BDpTau-217/Aβ42 Ratio Assay v1.0',
                 runId: 'RUN-20251223-0034'
             },
             '20250723-1433_Bay2_IL4': {
                 title: 'Clinical Test Report: NULISAqPCR™ IL4 Assay v2.1',
-                sampleId: 'IL4-2025-1223-002',
                 runId: 'RUN-20251223-0035'
             }
         };
@@ -912,7 +1001,6 @@
 
             // Update report content
             document.getElementById('reportTitle').textContent = report.title;
-            document.getElementById('sampleId').textContent = report.sampleId;
             document.getElementById('runId').textContent = report.runId;
 
             // Set current dates
