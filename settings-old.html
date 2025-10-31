@@ -567,6 +567,12 @@
                     </a>
                 </li>
                 <li class="settings-nav-item">
+                    <a href="#" class="settings-nav-link" onclick="showSection('alerts')">
+                        <span class="settings-icon">⚠️</span>
+                        System Alerts
+                    </a>
+                </li>
+                <li class="settings-nav-item">
                     <a href="#" class="settings-nav-link" onclick="showSection('network')">
                         <span class="settings-icon">🌐</span>
                         Network & Backup
@@ -699,7 +705,7 @@
                     </div>
                     <div class="section-content">
                         <div style="margin-bottom: 16px;">
-                            <button class="btn btn-primary" onclick="showAddUserModal()">Add New User</button>
+                            <button class="btn btn-primary">Add New User</button>
                         </div>
 
                         <table class="settings-table">
@@ -826,9 +832,12 @@
                                     <label class="form-label" style="font-size: 12px;">Event Type</label>
                                     <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;">
                                         <option value="">All Events</option>
-                                        <option value="user">User Events</option>
+                                        <option value="user">User Management</option>
+                                        <option value="run">Run Lifecycle</option>
+                                        <option value="config">Configuration</option>
+                                        <option value="backup">Backup/Database</option>
                                         <option value="system">System Events</option>
-                                        <option value="alerts">System Alerts</option>
+                                        <option value="network">Network Changes</option>
                                     </select>
                                 </div>
                             </div>
@@ -909,23 +918,7 @@
                                         <td>2025-12-23 13:22:30</td>
                                         <td>xiaojun8</td>
                                         <td><span style="background: #f3e5f5; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-75</span></td>
-                                        <td>Temporary password set for: lab_tech1 (expires on first login)</td>
-                                        <td>—</td>
-                                        <td>—</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2025-12-23 13:23:45</td>
-                                        <td>lab_tech1</td>
-                                        <td><span style="background: #e3f2fd; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-20</span></td>
-                                        <td>First login: User prompted for mandatory password change</td>
-                                        <td>—</td>
-                                        <td>—</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2025-12-23 13:24:12</td>
-                                        <td>lab_tech1</td>
-                                        <td><span style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-75</span></td>
-                                        <td>User successfully changed password on first login</td>
+                                        <td>User password reset for: lab_tech1</td>
                                         <td>—</td>
                                         <td>—</td>
                                     </tr>
@@ -1071,9 +1064,306 @@
                                 <li>All events are stored persistently and cannot be modified or deleted</li>
                                 <li>SYSTEM user indicates automated events triggered by the instrument</li>
                                 <li>Password changes are logged without storing actual password values (AS-75)</li>
-                                <li>Temporary password creation and first-login password changes are tracked separately</li>
                                 <li>Export functionality generates timestamped CSV files for regulatory compliance</li>
                                 <li>Event codes (AS-X) reference specific audit specification requirements</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Alerts -->
+            <div id="alerts" class="content-section">
+                <div class="settings-section">
+                    <div class="section-header">
+                        <div class="section-title">System Alert Events</div>
+                        <div class="section-subtitle">View and manage system alerts for monitoring critical events and warnings</div>
+                    </div>
+                    <div class="section-content">
+                        <!-- Filters Section -->
+                        <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-bottom: 20px;">
+                            <div style="font-weight: bold; margin-bottom: 12px; color: #333;">Filters</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">From Date</label>
+                                    <input type="date" class="form-input" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">To Date</label>
+                                    <input type="date" class="form-input" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Severity</label>
+                                    <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;" id="severityFilter">
+                                        <option value="">All Severities</option>
+                                        <option value="critical">Critical</option>
+                                        <option value="error">Error</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="info">Informational</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Status</label>
+                                    <select class="form-select" style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                        <option value="">All Alerts</option>
+                                        <option value="unacknowledged">Unacknowledged</option>
+                                        <option value="acknowledged">Acknowledged</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" style="font-size: 12px;">Search Alert Description</label>
+                                    <input type="text" class="form-input" placeholder="Search alerts..." style="max-width: 100%; font-size: 13px; padding: 8px;">
+                                </div>
+                                <div style="display: flex; align-items: flex-end; gap: 8px;">
+                                    <button class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">Apply Filters</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <div>
+                                <button class="btn btn-secondary" onclick="acknowledgeAllAlerts()">
+                                    ✓ Acknowledge All Warnings
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary" onclick="exportAlerts()">
+                                    📥 Export to CSV
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Alert Events Table -->
+                        <div style="overflow-x: auto; border: 1px solid #ddd; border-radius: 6px;">
+                            <table class="settings-table" style="margin: 0;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px; cursor: pointer;" onclick="sortAlertTable('severity')">Severity ↕</th>
+                                        <th style="width: 150px; cursor: pointer;" onclick="sortAlertTable('datetime')">Date/Time ↕</th>
+                                        <th style="width: 80px; cursor: pointer;" onclick="sortAlertTable('code')">Code ↕</th>
+                                        <th style="min-width: 300px;">Alert Description</th>
+                                        <th style="width: 150px;">Run Name</th>
+                                        <th style="width: 150px;">Assay</th>
+                                        <th style="width: 100px;">Status</th>
+                                        <th style="width: 80px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="alertsTableBody">
+                                    <tr>
+                                        <td><span style="background: #c62828; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">CRITICAL</span></td>
+                                        <td>2025-12-23 14:15:30</td>
+                                        <td><span style="background: #ffcdd2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-001</span></td>
+                                        <td>Database connection failure - all sample processing halted</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #c62828; font-weight: bold;">Unacknowledged</span></td>
+                                        <td><button class="btn btn-primary" style="font-size: 11px; padding: 4px 8px;" onclick="acknowledgeAlert(this)">ACK</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #c62828; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">CRITICAL</span></td>
+                                        <td>2025-12-22 10:20:15</td>
+                                        <td><span style="background: #ffcdd2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Bay 2 thermal control module unresponsive</td>
+                                        <td>RUN-20251222-003</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #c62828; font-weight: bold;">Unacknowledged</span></td>
+                                        <td><button class="btn btn-primary" style="font-size: 11px; padding: 4px 8px;" onclick="acknowledgeAlert(this)">ACK</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-23 08:45:20</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Barcode scanner communication lost</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-23 07:30:10</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-016</span></td>
+                                        <td>Unexpected software failure: Analysis module crashed during data processing</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-22 16:20:45</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Bay 1 dispense module malfunction</td>
+                                        <td>RUN-20251222-005</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-21 13:15:30</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-016</span></td>
+                                        <td>Unexpected software failure: Run controller service terminated unexpectedly</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #ef6c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">ERROR</span></td>
+                                        <td>2025-12-21 09:40:25</td>
+                                        <td><span style="background: #ffe0b2; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-007</span></td>
+                                        <td>Hardware failure: Temperature sensor out of range in Bay 3</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Acknowledged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #f57c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">WARNING</span></td>
+                                        <td>2025-12-23 12:00:05</td>
+                                        <td><span style="background: #ffecb3; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-010</span></td>
+                                        <td>Database backup failed - scheduled backup did not complete</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #f57c00; font-weight: bold;">Unviewed</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="viewAlert(this)">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #f57c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">WARNING</span></td>
+                                        <td>2025-12-23 11:30:00</td>
+                                        <td><span style="background: #ffecb3; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-003</span></td>
+                                        <td>Low bulk consumables: Wash buffer level below 20%</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #f57c00; font-weight: bold;">Unviewed</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="viewAlert(this)">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #f57c00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">WARNING</span></td>
+                                        <td>2025-12-22 18:10:15</td>
+                                        <td><span style="background: #ffecb3; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-010</span></td>
+                                        <td>Missed database backup - system was shutdown during scheduled backup window</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Viewed</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 15:45:12</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-52</span></td>
+                                        <td>Run started: RUN-20251223-001</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 17:30:20</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-53</span></td>
+                                        <td>Run completed successfully: RUN-20251223-001</td>
+                                        <td>RUN-20251223-001</td>
+                                        <td>NULISAqpcr BDpTau-217</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 14:25:30</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-008</span></td>
+                                        <td>Failed authentication attempt for user: lab_tech2</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 13:15:00</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-69</span></td>
+                                        <td>Firmware upgrade successful: Bay 1 Controller v2.1.0 → v2.2.0 (firmware_v2.2.0.bin)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 10:20:15</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-52</span></td>
+                                        <td>Run started: RUN-20251223-002</td>
+                                        <td>RUN-20251223-002</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-23 12:45:30</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-53</span></td>
+                                        <td>Run completed successfully: RUN-20251223-002</td>
+                                        <td>RUN-20251223-002</td>
+                                        <td>NULISAseq Multi-Panel</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-22 14:30:00</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AS-69</span></td>
+                                        <td>Firmware upgrade successful: Bay 2 Controller v2.0.5 → v2.2.0 (firmware_v2.2.0.bin)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span style="background: #1976d2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">INFO</span></td>
+                                        <td>2025-12-22 09:20:10</td>
+                                        <td><span style="background: #bbdefb; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">AN-008</span></td>
+                                        <td>Failed authentication attempt for user: xiaojun8</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td><span style="color: #666;">Auto-logged</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px;">
+                            <div style="color: #666; font-size: 13px;">
+                                Showing 1-18 of 47 alerts
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;" disabled>Previous</button>
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn btn-primary" style="font-size: 13px; padding: 6px 12px;">1</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">2</button>
+                                    <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">3</button>
+                                </div>
+                                <button class="btn btn-secondary" style="font-size: 13px; padding: 6px 12px;">Next</button>
+                            </div>
+                        </div>
+
+                        <!-- Info Panel -->
+                        <div style="margin-top: 20px; padding: 16px; background: #fff3e0; border-left: 4px solid #f57c00; border-radius: 4px;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #e65100;">⚠️ Alert System Information</div>
+                            <ul style="margin: 0; padding-left: 20px; color: #333; font-size: 13px; line-height: 1.6;">
+                                <li><strong>Critical:</strong> System faults requiring service personnel intervention (database failure, unrecoverable hardware failure)</li>
+                                <li><strong>Error:</strong> Processing faults that may be resolved by restart/POST (recoverable hardware failures)</li>
+                                <li><strong>Warning:</strong> Conditions requiring user intervention or notification (backup failures, low consumables)</li>
+                                <li><strong>Informational:</strong> Non-urgent events logged for reference (run lifecycle, firmware upgrades, failed login attempts)</li>
+                                <li>Critical and Error alerts require user acknowledgment via dialog notification</li>
+                                <li>Warning alerts show visual indication until viewed by user</li>
+                                <li>All alert events are persisted to storage (AN-20)</li>
                             </ul>
                         </div>
                     </div>
@@ -1282,80 +1572,6 @@
         </div>
     </div>
 
-    <!-- Add User Modal -->
-    <div id="addUserModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-title">Add New User</div>
-            <form>
-                <div class="modal-form-row">
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-input" id="newUsername" placeholder="Enter username">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" class="form-input" id="newFullName" placeholder="Enter full name">
-                    </div>
-                </div>
-
-                <div class="modal-form-row">
-                    <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" class="form-input" id="newUserEmail" placeholder="user@example.com">
-                        <div class="form-description">For password reset notifications</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Role</label>
-                        <select class="form-select" id="newUserRole">
-                            <option value="operator" selected>Operator</option>
-                            <option value="supervisor">Supervisor</option>
-                            <option value="technician">Technician</option>
-                        </select>
-                        <div class="form-description">Access level for this user</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Temporary Password</label>
-                    <div style="display: flex; gap: 8px; align-items: flex-start;">
-                        <div class="password-field" style="flex: 1;">
-                            <input type="password" class="form-input" id="newUserPassword" placeholder="Enter temporary password" style="max-width: 100%;">
-                            <button type="button" class="password-toggle" onclick="togglePassword('newUserPassword')">👁</button>
-                        </div>
-                        <button type="button" class="btn btn-secondary" onclick="generateTemporaryPassword()" style="white-space: nowrap;">Generate</button>
-                    </div>
-                    <div class="form-description">This temporary password will expire after first use</div>
-                </div>
-
-                <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 12px; margin-top: 16px; border-left: 4px solid #ffc107;">
-                    <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px; color: #856404;">⚠️ Security Notice</div>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #856404; line-height: 1.6;">
-                        <li><strong>User must change password on first login</strong></li>
-                        <li>Temporary password expires after initial use</li>
-                        <li>Provide this password securely to the user (e.g., in person, secure channel)</li>
-                        <li>Temporary password must meet standard password requirements</li>
-                    </ul>
-                </div>
-
-                <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; padding: 12px; margin-top: 12px;">
-                    <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px; color: #333;">Password Requirements:</div>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #666; line-height: 1.6;">
-                        <li>Minimum 8 characters</li>
-                        <li>At least one uppercase letter</li>
-                        <li>At least one lowercase letter</li>
-                        <li>At least one number</li>
-                        <li>At least one special character (!@#$%^&*)</li>
-                    </ul>
-                </div>
-            </form>
-
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeAddUserModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="createNewUser()">Create User</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         function goHome() {
             window.location.href = 'main-layout-home-with-run.html';
@@ -1520,133 +1736,63 @@
             alert('Sorting by: ' + column + '\n\n(In production, this would sort the table by the selected column)');
         }
 
-        // Add User Modal Functions
-        function showAddUserModal() {
-            document.getElementById('addUserModal').style.display = 'flex';
+        // Alert System Functions
+        function exportAlerts() {
+            alert('System alerts export initiated.\n\nGenerating CSV file with timestamp: system_alerts_' + new Date().toISOString().replace(/[:.]/g, '-') + '.csv\n\nFile will be saved to configured export location.');
         }
 
-        function closeAddUserModal() {
-            document.getElementById('addUserModal').style.display = 'none';
-            // Clear form fields
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newFullName').value = '';
-            document.getElementById('newUserEmail').value = '';
-            document.getElementById('newUserRole').value = 'operator';
-            document.getElementById('newUserPassword').value = '';
+        function sortAlertTable(column) {
+            alert('Sorting alerts by: ' + column + '\n\n(In production, this would sort the alert table by the selected column)');
         }
 
-        function generateTemporaryPassword() {
-            // Generate a secure random password that meets requirements
-            const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-            const numbers = '0123456789';
-            const symbols = '!@#$%^&*';
+        function acknowledgeAlert(button) {
+            if (confirm('Acknowledge this alert?\n\nThis will mark the alert as acknowledged and remove it from the unacknowledged list.')) {
+                const row = button.closest('tr');
+                const statusCell = row.cells[6];
+                const actionCell = row.cells[7];
 
-            let password = '';
-            // Ensure at least one of each required character type
-            password += uppercase[Math.floor(Math.random() * uppercase.length)];
-            password += lowercase[Math.floor(Math.random() * lowercase.length)];
-            password += numbers[Math.floor(Math.random() * numbers.length)];
-            password += symbols[Math.floor(Math.random() * symbols.length)];
+                statusCell.innerHTML = '<span style="color: #666;">Acknowledged</span>';
+                actionCell.innerHTML = '—';
 
-            // Fill rest with random characters from all sets
-            const allChars = uppercase + lowercase + numbers + symbols;
-            for (let i = 4; i < 12; i++) {
-                password += allChars[Math.floor(Math.random() * allChars.length)];
+                // Update row background to show acknowledged state
+                row.style.background = 'white';
+
+                alert('Alert acknowledged successfully.');
             }
-
-            // Shuffle the password
-            password = password.split('').sort(() => Math.random() - 0.5).join('');
-
-            // Set the password field
-            document.getElementById('newUserPassword').value = password;
-            document.getElementById('newUserPassword').type = 'text'; // Show generated password
-
-            alert('Temporary password generated!\n\nPassword: ' + password + '\n\n⚠️ Please copy this password and provide it securely to the user.\nThe user will be required to change it on first login.');
         }
 
-        function createNewUser() {
-            const username = document.getElementById('newUsername').value.trim();
-            const fullName = document.getElementById('newFullName').value.trim();
-            const email = document.getElementById('newUserEmail').value.trim();
-            const role = document.getElementById('newUserRole').value;
-            const password = document.getElementById('newUserPassword').value;
+        function viewAlert(button) {
+            const row = button.closest('tr');
+            const statusCell = row.cells[6];
+            const actionCell = row.cells[7];
 
-            // Validation
-            if (!username) {
-                alert('Please enter a username.');
-                return;
-            }
+            statusCell.innerHTML = '<span style="color: #666;">Viewed</span>';
+            actionCell.innerHTML = '—';
 
-            if (!fullName) {
-                alert('Please enter the full name.');
-                return;
-            }
+            // Update row background
+            row.style.background = 'white';
 
-            if (!email) {
-                alert('Please enter an email address.');
-                return;
-            }
-
-            // Basic email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-
-            if (!password) {
-                alert('Please enter a temporary password.');
-                return;
-            }
-
-            // Validate password strength
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-            if (!passwordRegex.test(password)) {
-                alert('Temporary password does not meet security requirements.\n\nPlease ensure the password:\n- Is at least 8 characters long\n- Contains uppercase and lowercase letters\n- Contains at least one number\n- Contains at least one special character (!@#$%^&*)');
-                return;
-            }
-
-            // Add new user to table
-            const tableBody = document.querySelector('.settings-table tbody');
-            const newRow = tableBody.insertRow(0); // Insert at top
-
-            // Capitalize role
-            const roleCapitalized = role.charAt(0).toUpperCase() + role.slice(1);
-
-            newRow.innerHTML = `
-                <td>${username}</td>
-                <td>${fullName}</td>
-                <td>${roleCapitalized}</td>
-                <td><span style="color: #dc3545; font-style: italic;">Pending first login</span></td>
-                <td><span class="status-indicator status-warning"></span>Password Reset Required</td>
-                <td>
-                    <button class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Edit</button>
-                    <button class="btn btn-danger" style="font-size: 12px; padding: 4px 8px;">Disable</button>
-                </td>
-            `;
-
-            // Close modal and show success message
-            closeAddUserModal();
-            alert('✓ User account created successfully!\n\n' +
-                  'Username: ' + username + '\n' +
-                  'Full Name: ' + fullName + '\n' +
-                  'Email: ' + email + '\n' +
-                  'Role: ' + roleCapitalized + '\n' +
-                  'Temporary Password: ' + password + '\n\n' +
-                  '⚠️ IMPORTANT:\n' +
-                  '• Provide this temporary password securely to the user\n' +
-                  '• User MUST change password on first login\n' +
-                  '• Temporary password expires after first use\n' +
-                  '• Account status will update to "Active" after first login');
+            alert('Alert marked as viewed.');
         }
 
-        // Close modal when clicking outside
-        document.getElementById('addUserModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAddUserModal();
+        function acknowledgeAllAlerts() {
+            if (confirm('Acknowledge all Warning alerts?\n\nThis will mark all unviewed warnings as acknowledged.')) {
+                const rows = document.querySelectorAll('#alertsTableBody tr');
+                let count = 0;
+
+                rows.forEach(row => {
+                    const statusCell = row.cells[6];
+                    if (statusCell && statusCell.textContent.includes('Unviewed')) {
+                        statusCell.innerHTML = '<span style="color: #666;">Viewed</span>';
+                        row.cells[7].innerHTML = '—';
+                        row.style.background = 'white';
+                        count++;
+                    }
+                });
+
+                alert(count + ' warning alerts have been acknowledged.');
             }
-        });
+        }
     </script>
 </body>
 </html>
