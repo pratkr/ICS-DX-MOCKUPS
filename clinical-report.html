@@ -495,19 +495,12 @@
 
         <!-- Test Results -->
         <div class="report-section">
-            <div class="section-title">Test Results</div>
-
-            <div class="threshold-info">
-                <strong>Clinical Cutoff Values:</strong><br>
-                • <strong>Negative:</strong> ≤ 0.0037 (ratio) - Unlikely to have amyloid pathology associated with Alzheimer's Disease<br>
-                • <strong>Indeterminate:</strong> 0.0037 - 0.0055 (ratio) - Uncertain; additional clinical evaluation recommended<br>
-                • <strong>Positive:</strong> &gt; 0.0055 (ratio) - Consistent with amyloid pathology associated with Alzheimer's Disease
-            </div>
+            <div class="section-title">Control Results</div>
 
             <table class="results-table">
                 <thead>
                     <tr>
-                        <th>Sample ID</th>
+                        <th>Control ID</th>
                         <th>Sample Plate Well</th>
                         <th>Assay Plate Well ID</th>
                         <th>BD-pTau217<br>(pg/mL)</th>
@@ -535,6 +528,35 @@
                         <td>0.0003</td>
                         <td class="status-normal">IN RANGE</td>
                     </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- Sample Results -->
+        <div class="report-section">
+            <div class="section-title">Sample Results</div>
+
+            <div class="threshold-info">
+                <strong>Clinical Cutoff Values:</strong><br>
+                • <strong>Negative:</strong> ≤ 0.0037 (ratio) - Unlikely to have amyloid pathology associated with Alzheimer's Disease<br>
+                • <strong>Indeterminate:</strong> 0.0037 - 0.0055 (ratio) - Uncertain; additional clinical evaluation recommended<br>
+                • <strong>Positive:</strong> &gt; 0.0055 (ratio) - Consistent with amyloid pathology associated with Alzheimer's Disease
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Sample Plate Well</th>
+                        <th>Assay Plate Well ID</th>
+                        <th>BD-pTau217<br>(pg/mL)</th>
+                        <th>β Amyloid 1-42<br>(pg/mL)</th>
+                        <th>BD-pTau217 / β Amyloid 1-42<br>Ratio</th>
+                        <th>Results Flag</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr>
                         <td>Sample1</td>
                         <td>A1</td>
@@ -1332,7 +1354,7 @@
                 </tr>
                 <tr>
                     <td class="field-label">Kit/Reagent Lot</td>
-                    <td>NULISA-BDP217-LOT2025A (exp. 2026-03-15), NULISA-AB42-LOT2025B (exp. 2026-04-22)</td>
+                    <td>NULISA-BDPTAU217-AB42-LOT2025A (exp. 2026-03-15)</td>
                 </tr>
                 <tr>
                     <td class="field-label">Software Version</td>
