@@ -382,189 +382,6 @@
             font-weight: bold;
         }
 
-        /* Authorization Section */
-        .authorization {
-            margin-top: 30px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-        }
-
-        .signature-line {
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .signature-block {
-            text-align: center;
-            width: 45%;
-        }
-
-        .signature-space {
-            border-bottom: 1px solid #333;
-            height: 40px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: flex-end;
-            padding-bottom: 4px;
-            font-style: italic;
-            color: #666;
-        }
-
-        .e-signature {
-            background: #e8f5e8;
-            border: 1px solid #4caf50;
-            border-radius: 4px;
-            padding: 8px;
-            font-weight: bold;
-            color: #2e7d32;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .signature-pending {
-            border-bottom: 1px solid #ccc;
-            height: 40px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-style: italic;
-            background: #f9f9f9;
-        }
-
-        .sign-button {
-            background: #2196f3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
-        .sign-button:hover {
-            background: #1976d2;
-        }
-
-        .status-draft {
-            color: #f57c00;
-            font-weight: bold;
-        }
-
-        .status-signed {
-            color: #2e7d32;
-            font-weight: bold;
-        }
-
-        /* E-Signature Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            width: 400px;
-            max-width: 90%;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            text-align: center;
-            color: #333;
-        }
-
-        .modal-field {
-            margin-bottom: 16px;
-        }
-
-        .modal-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .modal-input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .modal-input:focus {
-            outline: none;
-            border-color: #2196f3;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        .modal-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .modal-btn-cancel {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        .modal-btn-cancel:hover {
-            background: #e0e0e0;
-        }
-
-        .modal-btn-sign {
-            background: #2196f3;
-            color: white;
-        }
-
-        .modal-btn-sign:hover {
-            background: #1976d2;
-        }
-
-        .modal-error {
-            color: #d32f2f;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .e-signature-icon {
-            color: #4caf50;
-            font-size: 16px;
-        }
-
-        .signature-label {
-            font-size: 12px;
-            color: #666;
-        }
-
         /* Regulatory Footer */
         .regulatory-footer {
             margin-top: 30px;
@@ -659,17 +476,13 @@
     <div class="report-container">
         <!-- Laboratory Header -->
         <div class="lab-header">
-            <div class="report-title" id="reportTitle">Clinical Test Report: NULISAqPCR™ BDpTau-217/Aβ42 Ratio Assay v1.0</div>
+            <div class="report-title" id="reportTitle">Clinical Test Report: NULISAqPCR™ BD-pTau217 / β Amyloid 1-42 Ratio Assay 1.0</div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 14px;">
                 <div>
                     <strong>Specimen Type:</strong> Plasma (K₂EDTA)
                 </div>
                 <div>
                     <strong>Report Date:</strong> <span id="resultDate">2025-12-23 16:45 PST</span>
-                </div>
-                <div>
-                    <span>Report Status: </span>
-                    <span id="reportStatus" class="status-draft">DRAFT</span>
                 </div>
             </div>
         </div>
@@ -685,166 +498,814 @@
                 • <strong>Positive:</strong> &gt; 0.0055 (ratio) - Consistent with amyloid pathology associated with Alzheimer's Disease
             </div>
 
-            <div class="threshold-info" style="background: #e3f2fd; border-color: #90caf9;">
-                <strong>⚠️ Important Clinical Notes:</strong><br>
-                • This test is intended for adult patients aged 50 years and older presenting with signs and symptoms of cognitive decline in specialized care settings.<br>
-                • This test is NOT intended as a screening or stand-alone diagnostic test.<br>
-                • Results should be interpreted in conjunction with clinical evaluation and other diagnostic information.<br>
-                • Negative results do not rule out Alzheimer's Disease; other causes of cognitive decline should be investigated.
-            </div>
-
             <table class="results-table">
                 <thead>
                     <tr>
                         <th>Sample ID</th>
                         <th>Sample Plate Well</th>
                         <th>Assay Plate Well ID</th>
-                        <th>BDpTau-217<br>(pg/mL)</th>
-                        <th>Aβ42<br>(pg/mL)</th>
-                        <th>BDpTau-217/Aβ42<br>Ratio</th>
-                        <th>QC Status</th>
+                        <th>BD-pTau217<br>(pg/mL)</th>
+                        <th>β Amyloid 1-42<br>(pg/mL)</th>
+                        <th>BD-pTau217 / β Amyloid 1-42<br>Ratio</th>
                         <th>Results Flag</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td>Control Pos</td>
+                        <td>H12</td>
+                        <td>H12</td>
+                        <td>1.85<br>(Expected: 1.75 ± 0.25 pg/mL)</td>
+                        <td>45.2<br>(Expected: 1.75 ± 0.25 pg/mL)</td>
+                        <td>0.0409</td>
+                        <td class="status-normal">IN RANGE</td>
+                    </tr>
+                    <tr>
+                        <td>Control Neg</td>
+                        <td>H11</td>
+                        <td>H11</td>
+                        <td>0.03<br>(Expected: &lt;= 0.05 pg/mL)</td>
+                        <td>95.6<br>(Expected: &lt;= 0.05 pg/mL)</td>
+                        <td>0.0003</td>
+                        <td class="status-normal">IN RANGE</td>
+                    </tr>
+                    <tr>
                         <td>Sample1</td>
                         <td>A1</td>
-                        <td>AP001_A1</td>
+                        <td>A1</td>
                         <td>0.31</td>
                         <td>85.2</td>
                         <td>0.0036</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-negative">NEGATIVE</td>
                     </tr>
                     <tr>
                         <td>Sample2</td>
                         <td>A2</td>
-                        <td>AP001_A2</td>
+                        <td>A2</td>
                         <td>0.85</td>
                         <td>112.4</td>
                         <td>0.0076</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-positive">POSITIVE</td>
                     </tr>
                     <tr>
                         <td>Sample3</td>
                         <td>A3</td>
-                        <td>AP001_A3</td>
+                        <td>A3</td>
                         <td>0.15</td>
                         <td>98.7</td>
                         <td>0.0015</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-negative">NEGATIVE</td>
                     </tr>
                     <tr>
                         <td>Sample4</td>
                         <td>A4</td>
-                        <td>AP001_A4</td>
+                        <td>A4</td>
                         <td>0.62</td>
                         <td>135.6</td>
                         <td>0.0046</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-indeterminate">INDETERMINATE</td>
                     </tr>
                     <tr>
                         <td>Sample5</td>
                         <td>A5</td>
-                        <td>AP001_A5</td>
-                        <td>0.22</td>
+                        <td>A5</td>
+                        <td>ERR-123</td>
                         <td>105.3</td>
-                        <td>0.0021</td>
-                        <td class="status-normal">PASS</td>
-                        <td class="status-negative">NEGATIVE</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
                     </tr>
                     <tr>
                         <td>Sample6</td>
                         <td>A6</td>
-                        <td>AP001_A6</td>
+                        <td>A6</td>
                         <td>0.78</td>
                         <td>92.1</td>
                         <td>0.0085</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-positive">POSITIVE</td>
                     </tr>
                     <tr>
                         <td>Sample7</td>
                         <td>A7</td>
-                        <td>AP001_A7</td>
+                        <td>A7</td>
                         <td>0.28</td>
                         <td>88.4</td>
                         <td>0.0032</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-negative">NEGATIVE</td>
                     </tr>
                     <tr>
                         <td>Sample8</td>
                         <td>A8</td>
-                        <td>AP001_A8</td>
+                        <td>A8</td>
                         <td>0.41</td>
-                        <td>95.8</td>
-                        <td>0.0043</td>
-                        <td class="status-normal">PASS</td>
-                        <td class="status-indeterminate">INDETERMINATE</td>
+                        <td>ERR-456</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
                     </tr>
                     <tr>
                         <td>Sample9</td>
                         <td>A9</td>
-                        <td>AP001_A9</td>
+                        <td>A9</td>
                         <td>0.18</td>
                         <td>102.5</td>
                         <td>0.0018</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-negative">NEGATIVE</td>
                     </tr>
                     <tr>
                         <td>Sample10</td>
                         <td>A10</td>
-                        <td>AP001_A10</td>
+                        <td>A10</td>
                         <td>0.92</td>
                         <td>118.7</td>
                         <td>0.0077</td>
-                        <td class="status-normal">PASS</td>
                         <td class="status-positive">POSITIVE</td>
                     </tr>
                     <tr>
-                        <td>Control Pos</td>
+                        <td>Sample11</td>
                         <td>B1</td>
-                        <td>AP001_B1</td>
-                        <td>1.85</td>
-                        <td>45.2</td>
-                        <td>0.0409</td>
-                        <td class="status-normal">PASS</td>
-                        <td class="status-normal">IN RANGE</td>
+                        <td>B1</td>
+                        <td>0.45</td>
+                        <td>89.3</td>
+                        <td>0.0050</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
                     </tr>
                     <tr>
-                        <td>Control Neg</td>
+                        <td>Sample12</td>
                         <td>B2</td>
-                        <td>AP001_B2</td>
-                        <td>0.03</td>
-                        <td>95.6</td>
-                        <td>0.0003</td>
-                        <td class="status-normal">PASS</td>
-                        <td class="status-normal">IN RANGE</td>
+                        <td>B2</td>
+                        <td>0.33</td>
+                        <td>91.5</td>
+                        <td>0.0036</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample13</td>
+                        <td>B3</td>
+                        <td>B3</td>
+                        <td>0.88</td>
+                        <td>105.2</td>
+                        <td>0.0084</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample14</td>
+                        <td>B4</td>
+                        <td>B4</td>
+                        <td>0.21</td>
+                        <td>97.8</td>
+                        <td>0.0021</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample15</td>
+                        <td>B5</td>
+                        <td>B5</td>
+                        <td>0.67</td>
+                        <td>123.4</td>
+                        <td>0.0054</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample16</td>
+                        <td>B6</td>
+                        <td>B6</td>
+                        <td>ERR-789</td>
+                        <td>88.9</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample17</td>
+                        <td>B7</td>
+                        <td>B7</td>
+                        <td>0.39</td>
+                        <td>94.1</td>
+                        <td>0.0041</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample18</td>
+                        <td>B8</td>
+                        <td>B8</td>
+                        <td>0.95</td>
+                        <td>110.6</td>
+                        <td>0.0086</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample19</td>
+                        <td>B9</td>
+                        <td>B9</td>
+                        <td>0.24</td>
+                        <td>99.3</td>
+                        <td>0.0024</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample20</td>
+                        <td>B10</td>
+                        <td>B10</td>
+                        <td>0.58</td>
+                        <td>ERR-234</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample21</td>
+                        <td>C1</td>
+                        <td>C1</td>
+                        <td>0.31</td>
+                        <td>87.5</td>
+                        <td>0.0035</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample22</td>
+                        <td>C2</td>
+                        <td>C2</td>
+                        <td>0.72</td>
+                        <td>108.3</td>
+                        <td>0.0066</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample23</td>
+                        <td>C3</td>
+                        <td>C3</td>
+                        <td>0.19</td>
+                        <td>93.7</td>
+                        <td>0.0020</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample24</td>
+                        <td>C4</td>
+                        <td>C4</td>
+                        <td>0.48</td>
+                        <td>101.2</td>
+                        <td>0.0047</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample25</td>
+                        <td>C5</td>
+                        <td>C5</td>
+                        <td>0.83</td>
+                        <td>115.8</td>
+                        <td>0.0072</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample26</td>
+                        <td>C6</td>
+                        <td>C6</td>
+                        <td>0.27</td>
+                        <td>96.4</td>
+                        <td>0.0028</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample27</td>
+                        <td>C7</td>
+                        <td>C7</td>
+                        <td>0.51</td>
+                        <td>119.5</td>
+                        <td>0.0043</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample28</td>
+                        <td>C8</td>
+                        <td>C8</td>
+                        <td>0.91</td>
+                        <td>103.7</td>
+                        <td>0.0088</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample29</td>
+                        <td>C9</td>
+                        <td>C9</td>
+                        <td>0.16</td>
+                        <td>90.2</td>
+                        <td>0.0018</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample30</td>
+                        <td>C10</td>
+                        <td>C10</td>
+                        <td>0.69</td>
+                        <td>107.9</td>
+                        <td>0.0064</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample31</td>
+                        <td>D1</td>
+                        <td>D1</td>
+                        <td>0.37</td>
+                        <td>92.6</td>
+                        <td>0.0040</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample32</td>
+                        <td>D2</td>
+                        <td>D2</td>
+                        <td>0.29</td>
+                        <td>ERR-567</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample33</td>
+                        <td>D3</td>
+                        <td>D3</td>
+                        <td>0.76</td>
+                        <td>114.3</td>
+                        <td>0.0067</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample34</td>
+                        <td>D4</td>
+                        <td>D4</td>
+                        <td>0.22</td>
+                        <td>88.1</td>
+                        <td>0.0025</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample35</td>
+                        <td>D5</td>
+                        <td>D5</td>
+                        <td>0.54</td>
+                        <td>121.7</td>
+                        <td>0.0044</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample36</td>
+                        <td>D6</td>
+                        <td>D6</td>
+                        <td>0.87</td>
+                        <td>109.4</td>
+                        <td>0.0080</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample37</td>
+                        <td>D7</td>
+                        <td>D7</td>
+                        <td>0.20</td>
+                        <td>95.8</td>
+                        <td>0.0021</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample38</td>
+                        <td>D8</td>
+                        <td>D8</td>
+                        <td>0.63</td>
+                        <td>102.5</td>
+                        <td>0.0061</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample39</td>
+                        <td>D9</td>
+                        <td>D9</td>
+                        <td>0.34</td>
+                        <td>98.3</td>
+                        <td>0.0035</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample40</td>
+                        <td>D10</td>
+                        <td>D10</td>
+                        <td>ERR-890</td>
+                        <td>106.2</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample41</td>
+                        <td>E1</td>
+                        <td>E1</td>
+                        <td>0.42</td>
+                        <td>91.8</td>
+                        <td>0.0046</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample42</td>
+                        <td>E2</td>
+                        <td>E2</td>
+                        <td>0.79</td>
+                        <td>117.2</td>
+                        <td>0.0067</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample43</td>
+                        <td>E3</td>
+                        <td>E3</td>
+                        <td>0.25</td>
+                        <td>93.4</td>
+                        <td>0.0027</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample44</td>
+                        <td>E4</td>
+                        <td>E4</td>
+                        <td>0.56</td>
+                        <td>124.1</td>
+                        <td>0.0045</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample45</td>
+                        <td>E5</td>
+                        <td>E5</td>
+                        <td>0.93</td>
+                        <td>111.5</td>
+                        <td>0.0083</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample46</td>
+                        <td>E6</td>
+                        <td>E6</td>
+                        <td>0.18</td>
+                        <td>ERR-345</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample47</td>
+                        <td>E7</td>
+                        <td>E7</td>
+                        <td>0.61</td>
+                        <td>104.8</td>
+                        <td>0.0058</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample48</td>
+                        <td>E8</td>
+                        <td>E8</td>
+                        <td>0.30</td>
+                        <td>97.6</td>
+                        <td>0.0031</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample49</td>
+                        <td>E9</td>
+                        <td>E9</td>
+                        <td>0.47</td>
+                        <td>100.3</td>
+                        <td>0.0047</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample50</td>
+                        <td>E10</td>
+                        <td>E10</td>
+                        <td>0.84</td>
+                        <td>113.9</td>
+                        <td>0.0074</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample51</td>
+                        <td>F1</td>
+                        <td>F1</td>
+                        <td>0.23</td>
+                        <td>89.7</td>
+                        <td>0.0026</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample52</td>
+                        <td>F2</td>
+                        <td>F2</td>
+                        <td>0.68</td>
+                        <td>120.4</td>
+                        <td>0.0056</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample53</td>
+                        <td>F3</td>
+                        <td>F3</td>
+                        <td>0.35</td>
+                        <td>94.2</td>
+                        <td>0.0037</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample54</td>
+                        <td>F4</td>
+                        <td>F4</td>
+                        <td>ERR-678</td>
+                        <td>107.5</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample55</td>
+                        <td>F5</td>
+                        <td>F5</td>
+                        <td>0.75</td>
+                        <td>116.8</td>
+                        <td>0.0064</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample56</td>
+                        <td>F6</td>
+                        <td>F6</td>
+                        <td>0.26</td>
+                        <td>92.3</td>
+                        <td>0.0028</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample57</td>
+                        <td>F7</td>
+                        <td>F7</td>
+                        <td>0.52</td>
+                        <td>118.6</td>
+                        <td>0.0044</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample58</td>
+                        <td>F8</td>
+                        <td>F8</td>
+                        <td>0.89</td>
+                        <td>105.1</td>
+                        <td>0.0085</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample59</td>
+                        <td>F9</td>
+                        <td>F9</td>
+                        <td>0.17</td>
+                        <td>ERR-901</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample60</td>
+                        <td>F10</td>
+                        <td>F10</td>
+                        <td>0.64</td>
+                        <td>109.7</td>
+                        <td>0.0058</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample61</td>
+                        <td>G1</td>
+                        <td>G1</td>
+                        <td>0.32</td>
+                        <td>96.8</td>
+                        <td>0.0033</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample62</td>
+                        <td>G2</td>
+                        <td>G2</td>
+                        <td>0.71</td>
+                        <td>112.9</td>
+                        <td>0.0063</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample63</td>
+                        <td>G3</td>
+                        <td>G3</td>
+                        <td>0.19</td>
+                        <td>91.4</td>
+                        <td>0.0021</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample64</td>
+                        <td>G4</td>
+                        <td>G4</td>
+                        <td>0.49</td>
+                        <td>122.3</td>
+                        <td>0.0040</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample65</td>
+                        <td>G5</td>
+                        <td>G5</td>
+                        <td>0.86</td>
+                        <td>108.6</td>
+                        <td>0.0079</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample66</td>
+                        <td>G6</td>
+                        <td>G6</td>
+                        <td>0.28</td>
+                        <td>95.2</td>
+                        <td>0.0029</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample67</td>
+                        <td>G7</td>
+                        <td>G7</td>
+                        <td>0.55</td>
+                        <td>119.8</td>
+                        <td>0.0046</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample68</td>
+                        <td>G8</td>
+                        <td>G8</td>
+                        <td>0.92</td>
+                        <td>ERR-012</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample69</td>
+                        <td>G9</td>
+                        <td>G9</td>
+                        <td>0.21</td>
+                        <td>98.9</td>
+                        <td>0.0021</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample70</td>
+                        <td>G10</td>
+                        <td>G10</td>
+                        <td>0.66</td>
+                        <td>111.2</td>
+                        <td>0.0059</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample71</td>
+                        <td>H1</td>
+                        <td>H1</td>
+                        <td>0.38</td>
+                        <td>93.6</td>
+                        <td>0.0041</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample72</td>
+                        <td>H2</td>
+                        <td>H2</td>
+                        <td>0.74</td>
+                        <td>115.4</td>
+                        <td>0.0064</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample73</td>
+                        <td>H3</td>
+                        <td>H3</td>
+                        <td>0.24</td>
+                        <td>90.5</td>
+                        <td>0.0027</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample74</td>
+                        <td>H4</td>
+                        <td>H4</td>
+                        <td>0.50</td>
+                        <td>123.7</td>
+                        <td>0.0040</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample75</td>
+                        <td>H5</td>
+                        <td>H5</td>
+                        <td>ERR-345</td>
+                        <td>110.3</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample76</td>
+                        <td>H6</td>
+                        <td>H6</td>
+                        <td>0.27</td>
+                        <td>97.1</td>
+                        <td>0.0028</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample77</td>
+                        <td>H7</td>
+                        <td>H7</td>
+                        <td>0.60</td>
+                        <td>106.5</td>
+                        <td>0.0056</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample78</td>
+                        <td>H8</td>
+                        <td>H8</td>
+                        <td>0.33</td>
+                        <td>94.7</td>
+                        <td>0.0035</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample79</td>
+                        <td>H9</td>
+                        <td>H9</td>
+                        <td>0.81</td>
+                        <td>118.1</td>
+                        <td>0.0069</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample80</td>
+                        <td>H10</td>
+                        <td>H10</td>
+                        <td>0.15</td>
+                        <td>88.3</td>
+                        <td>0.0017</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample81</td>
+                        <td>A11</td>
+                        <td>A11</td>
+                        <td>0.44</td>
+                        <td>ERR-678</td>
+                        <td>No Result</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Sample82</td>
+                        <td>A12</td>
+                        <td>A12</td>
+                        <td>0.70</td>
+                        <td>114.6</td>
+                        <td>0.0061</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample83</td>
+                        <td>B11</td>
+                        <td>B11</td>
+                        <td>0.36</td>
+                        <td>99.8</td>
+                        <td>0.0036</td>
+                        <td class="status-negative">NEGATIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample84</td>
+                        <td>B12</td>
+                        <td>B12</td>
+                        <td>0.53</td>
+                        <td>121.2</td>
+                        <td>0.0044</td>
+                        <td class="status-indeterminate">INDETERMINATE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample85</td>
+                        <td>C11</td>
+                        <td>C11</td>
+                        <td>0.88</td>
+                        <td>107.8</td>
+                        <td>0.0082</td>
+                        <td class="status-positive">POSITIVE</td>
+                    </tr>
+                    <tr>
+                        <td>Sample86</td>
+                        <td>C12</td>
+                        <td>C12</td>
+                        <td>0.20</td>
+                        <td>92.7</td>
+                        <td>0.0022</td>
+                        <td class="status-negative">NEGATIVE</td>
                     </tr>
                 </tbody>
             </table>
 
-        </div>
-
-        <!-- QC Status -->
-        <div class="report-section">
-            <div class="section-title">Control QC Status</div>
-            <div class="qc-pass">
-                <strong>Positive Control:</strong><br>
-                &nbsp;&nbsp;BDpTau-217: 1.85 pg/mL (Expected: 1.75 ± 0.25 pg/mL)<br>
-                &nbsp;&nbsp;Aβ42: 45.2 pg/mL (Expected: 46.0 ± 5.0 pg/mL)<br>
-                &nbsp;&nbsp;Ratio: 0.0409 (Expected: 0.038 - 0.042) - <strong>PASS</strong><br><br>
-                <strong>Negative Control:</strong><br>
-                &nbsp;&nbsp;BDpTau-217: 0.03 pg/mL (Expected: ≤ 0.05 pg/mL)<br>
-                &nbsp;&nbsp;Aβ42: 95.6 pg/mL (Expected: 90.0 - 100.0 pg/mL)<br>
-                &nbsp;&nbsp;Ratio: 0.0003 (Expected: ≤ 0.0006) - <strong>PASS</strong>
-            </div>
         </div>
 
         <!-- Assay/Versioning -->
@@ -853,11 +1314,11 @@
             <table class="info-table">
                 <tr>
                     <td class="field-label">Assay Name</td>
-                    <td>BDpTau217/Aβ42 Ratio</td>
+                    <td>BD-pTau217 / β Amyloid 1-42 Ratio</td>
                 </tr>
                 <tr>
                     <td class="field-label">Markers Measured</td>
-                    <td>BDpTau-217, Aβ42 (1-42)</td>
+                    <td>BD-pTau217, β Amyloid 1-42</td>
                 </tr>
                 <tr>
                     <td class="field-label">Assay Version</td>
@@ -907,25 +1368,10 @@
                     <td>2025-12-23 11:47:18</td>
                 </tr>
                 <tr>
-                    <td class="field-label">Run Started By</td>
+                    <td class="field-label">User</td>
                     <td>xiaojun8</td>
                 </tr>
             </table>
-        </div>
-
-        <!-- Authorization -->
-        <div class="authorization">
-            <div class="section-title">Authorization</div>
-            <div class="signature-line">
-                <div class="signature-block" style="width: 100%; text-align: center;">
-                    <div class="signature-label">E-Signature / Date-Time</div>
-                    <div id="signatureContainer">
-                        <div class="signature-pending">Awaiting Signature</div>
-                        <button class="sign-button" onclick="applySignature()">Apply E-Signature</button>
-                    </div>
-                    <div id="signatureDate" style="display: none;">2025-12-23 16:45 PST</div>
-                </div>
-            </div>
         </div>
 
         <!-- Regulatory Statements -->
@@ -933,7 +1379,9 @@
             <div class="regulatory-footer-text">For In Vitro Diagnostic Use.</div>
             <div style="margin-top: 8px; font-size: 12px; color: #666;">
                 This test has been performed in accordance with FDA regulations for in vitro diagnostic devices.<br><br>
-                <strong>Intended Use:</strong> The BDpTau-217/Aβ42 Ratio test is indicated for adult patients, aged 50 years and older, presenting at a specialized care setting with signs and symptoms of cognitive decline as an aid to identify patients with amyloid pathology associated with Alzheimer's Disease. This test is not intended as a screening or stand-alone diagnostic test.
+                <strong>Alamar Biosciences</strong><br>
+                47071 Bayside Pkwy<br>
+                Fremont, CA 94538
             </div>
         </div>
     </div>
@@ -942,7 +1390,7 @@
         // Sample report data mapping
         const reportData = {
             '20251223-1545_Bay1_BDpTau217': {
-                title: 'Clinical Test Report: NULISAqPCR™ BDpTau-217/Aβ42 Ratio Assay v1.0',
+                title: 'Clinical Test Report: NULISAqPCR™ BD-pTau217 / β Amyloid 1-42 Ratio Assay 1.0',
                 runId: 'RUN-20251223-0034'
             },
             '20250723-1433_Bay2_IL4': {
@@ -1017,145 +1465,6 @@
 
             document.getElementById('resultDate').textContent = dateString;
         });
-
-        // E-Signature functionality
-        function applySignature() {
-            showSignatureModal();
-
-        }
-
-        function showSignatureModal() {
-            const currentUser = 'xiaojun8'; // In real app, get from session/auth
-
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-title">E-Signature Authentication</div>
-                    <div class="modal-field">
-                        <label class="modal-label">Username</label>
-                        <input type="text" class="modal-input" value="${currentUser}" readonly>
-                    </div>
-                    <div class="modal-field">
-                        <label class="modal-label">Password</label>
-                        <input type="password" class="modal-input" id="signaturePassword" placeholder="Enter your password">
-                        <div id="passwordError" class="modal-error" style="display: none;">Please enter your password</div>
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="modal-btn modal-btn-cancel" onclick="closeSignatureModal()">Cancel</button>
-                        <button class="modal-btn modal-btn-sign" onclick="confirmSignature('${currentUser}')">Apply Signature</button>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            // Focus on password field
-            setTimeout(() => {
-                document.getElementById('signaturePassword').focus();
-            }, 100);
-
-            // Allow Enter key to submit
-            document.getElementById('signaturePassword').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    confirmSignature(currentUser);
-
-        }
-            });
-
-        }
-
-        function closeSignatureModal() {
-            const modal = document.querySelector('.modal-overlay');
-            if (modal) {
-                document.body.removeChild(modal);
-
-        }
-
-        }
-
-        function confirmSignature(username) {
-            const password = document.getElementById('signaturePassword').value;
-            const errorDiv = document.getElementById('passwordError');
-
-            if (!password.trim()) {
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = 'Please enter your password';
-                return;
-
-        }
-
-            // In real app, validate password against auth system
-            // For demo, accept any non-empty password
-
-            // Close modal
-            closeSignatureModal();
-
-            // Apply signature
-            applyDigitalSignature(username);
-
-        }
-
-        function applyDigitalSignature(username) {
-            const now = new Date();
-            const dateString = now.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            }) + ' ' + now.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                timeZoneName: 'short'
-            });
-
-            // Create signed signature container
-            const signatureContainer = document.getElementById('signatureContainer');
-            signatureContainer.innerHTML = `
-                <div class="e-signature">
-                    <span class="e-signature-icon">🔒</span>
-                    <div>
-                        <div>/s/ ${username}</div>
-                        <div style="font-size: 11px; color: #666;">E-Signature Applied</div>
-                    </div>
-                </div>
-            `;
-
-            // Show and update signature date
-            const signatureDate = document.getElementById('signatureDate');
-            signatureDate.textContent = dateString;
-            signatureDate.style.display = 'block';
-
-            // Update report status
-            const reportStatus = document.getElementById('reportStatus');
-            reportStatus.textContent = 'SIGNED AND RELEASED';
-            reportStatus.className = 'status-signed';
-
-            // Show success message
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: #4caf50;
-                color: white;
-                padding: 16px 24px;
-                border-radius: 8px;
-                font-weight: bold;
-                z-index: 1001;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            `;
-            notification.textContent = `Report successfully signed by ${username}!`;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-
-        }
-            }, 3000);
-
-        }
 
         function showModeSwitch() {
             if (confirm("Are you sure you want to switch to RUO mode?")) {
