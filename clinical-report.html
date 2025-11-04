@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinical Test Report - ARGO HT</title>
+
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -468,6 +473,7 @@
         </div>
         <div style="display: flex; gap: 12px;">
             <button class="action-btn" onclick="printReport()">🖨️ Print</button>
+            <button class="action-btn" onclick="downloadPDF()">📥 Download PDF</button>
             <button class="action-btn primary" onclick="exportReport()">📤 Export to Shared Folder</button>
         </div>
     </div>
@@ -1469,6 +1475,136 @@
         function showModeSwitch() {
             if (confirm("Are you sure you want to switch to RUO mode?")) {
                 window.location.href = "login-ruo.html";
+            }
+        }
+
+        async function downloadPDF() {
+            // Show loading notification
+            const loadingNotification = document.createElement('div');
+            loadingNotification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #007acc;
+                color: white;
+                padding: 20px 32px;
+                border-radius: 8px;
+                z-index: 1001;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                font-weight: bold;
+                font-size: 16px;
+            `;
+            loadingNotification.textContent = 'Generating PDF...';
+            document.body.appendChild(loadingNotification);
+
+            try {
+                // Get the report container
+                const reportContainer = document.querySelector('.report-container');
+
+                // Use html2canvas to capture the report
+                const canvas = await html2canvas(reportContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+
+                // Convert canvas to image
+                const imgData = canvas.toDataURL('image/png');
+
+                // Create PDF using jsPDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // Calculate dimensions to fit the page
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                // Add first page
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                // Add additional pages if content is longer than one page
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                // Generate filename with run ID and date
+                const runId = document.getElementById('runId').textContent;
+                const dateStr = new Date().toISOString().split('T')[0];
+                const filename = `Clinical_Report_${runId}_${dateStr}.pdf`;
+
+                // Save the PDF
+                pdf.save(filename);
+
+                // Remove loading notification
+                document.body.removeChild(loadingNotification);
+
+                // Show success notification
+                const successNotification = document.createElement('div');
+                successNotification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #4caf50;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 4px;
+                    z-index: 1000;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    font-weight: bold;
+                `;
+                successNotification.textContent = `PDF downloaded: ${filename}`;
+                document.body.appendChild(successNotification);
+
+                // Remove success notification after 3 seconds
+                setTimeout(() => {
+                    if (document.body.contains(successNotification)) {
+                        document.body.removeChild(successNotification);
+                    }
+                }, 3000);
+
+            } catch (error) {
+                // Remove loading notification
+                if (document.body.contains(loadingNotification)) {
+                    document.body.removeChild(loadingNotification);
+                }
+
+                // Show error notification
+                const errorNotification = document.createElement('div');
+                errorNotification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #d32f2f;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 4px;
+                    z-index: 1000;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    font-weight: bold;
+                `;
+                errorNotification.textContent = 'Error generating PDF. Please try again.';
+                document.body.appendChild(errorNotification);
+
+                setTimeout(() => {
+                    if (document.body.contains(errorNotification)) {
+                        document.body.removeChild(errorNotification);
+                    }
+                }, 3000);
+
+                console.error('PDF generation error:', error);
             }
         }
     </script>
